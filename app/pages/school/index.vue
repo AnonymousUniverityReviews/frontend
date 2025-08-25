@@ -10,7 +10,7 @@
             >
             </SearchBar>
         </div>
-        <div class="flex flex-col w-[80%] mx-auto">
+        <div class="flex flex-col w-[80%] mx-auto mb-8">
             <!-- Header -->
             <div class="flex flex-row w-full justify-between items-center mb-2">
                 <div class="flex flex-row w-max justify-between items-center gap-4">
@@ -51,15 +51,22 @@
                 </div>
                 <p>Page {{ page }}/{{ totalPages }}</p>
             </div>
+            <!-- Paginator top -->
+            <Paginator 
+                v-model="page" 
+                :total-pages="totalPages" 
+                :link-maker="(page) => { return { path: '/school', query: { search: search, pageSize: pageSize, page: page } } }"
+            >
+            </Paginator>
             <!-- Schools -->
             <div
-                class="flex flex-col w-full gap-2"
+                class="flex flex-col w-full gap-2 my-4"
             >
                 <NuxtLink
                     :to="{ name: 'school-id', params: { id: school.id } }"
                     v-for="school in schools"
                     :ket="school.id"
-                    class="flex flex-row border-1 p-2 justify-between"
+                    class="flex flex-row border-1 p-3 justify-between rounded-xl"
                 >
                     <div class="flex flex-col gap-1">
                         <h2
@@ -78,7 +85,7 @@
                             class="text-gray-900 text-2xl text-center py-2 px-1 font-black"
                             :class="school.overallRating as number >= 1 ? displayedRatingColors[Math.floor(school.overallRating as number) - 1] : 'dark:text-gray-100'"
                         >
-                            {{ school.overallRating }}
+                            {{ school.overallRating?.toFixed(2) }}
                         </p>
                     </div>
                 </NuxtLink>
@@ -89,33 +96,14 @@
                     Nothing here...
                 </div>
             </div>
-            <!--  -->
+            <!-- Paginator bottom -->
+            <Paginator 
+                v-model="page" 
+                :total-pages="totalPages" 
+                :link-maker="(page) => { return { path: '/school', query: { search: search, pageSize: pageSize, page: page } } }"
+            >
+            </Paginator>
         </div>
-        <nav aria-label="Page navigation example">
-            <ul class="inline-flex -space-x-px text-base h-10">
-                <li>
-                    <a href="#" class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                </li>
-                <li>
-                    <a href="#" aria-current="page" class="flex items-center justify-center px-4 h-10 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
-                </li>
-            </ul>
-        </nav>
     </div>
 </template>
 
@@ -129,8 +117,17 @@ const route = useRoute()
 const search = ref<string>(route.query.search as string ?? "");
 
 const page = ref<number>(+(route.query.page ?? 1));
-const possiblePageSizes = [3, 5, 10, 20];
-const pageSize = ref<number>(5);
+const possiblePageSizes = [1, 3, 5, 10, 20];
+const pageSize = ref<number>(+(route.query.pageSize ?? 5));
+
+watch(() => route.query, () => {
+    search.value = (route.query.search as string) ?? "";
+    page.value = +(route.query.page ?? 1);
+    pageSize.value = +(route.query.pageSize ?? pageSize.value);
+    getPageData();
+  },
+  { immediate: true }
+);
 
 const schools = ref<School[]>([]);
 const total = ref<number>(0);
@@ -142,11 +139,17 @@ async function changePageSize(newPageSize: number) {
 }
 
 async function getPageData() {
-    console.log(search.value, "info", page.value, pageSize.value)
     const schoolsResult = await getSchools(search.value, "info", page.value, pageSize.value);
     total.value = schoolsResult.total ?? 0;
     schools.value = schoolsResult.result;
     totalPages.value = Math.ceil(total.value / pageSize.value);
+
+    if (page.value > totalPages.value) {
+        page.value = totalPages.value;
+    }
+    if (page.value < 1) {
+        page.value = 1;
+    }
 }
 
 await getPageData();
