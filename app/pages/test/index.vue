@@ -34,6 +34,17 @@
                 </div>
             </div>
         </div>
+        <button @click="openLoginFrame">
+            Open login frame
+        </button>
+    </div>
+    <div
+        v-if="loginFrameOpened"
+        class="fixed w-full h-full inset-0 z-50 flex items-center justify-center bg-black/50"
+    >
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg relative w-[90%] h-[90%]">
+            <LoginFrame />
+        </div>
     </div>
 </template>
 
@@ -69,4 +80,10 @@ onMounted(() => {
         initTooltips();
     })
 })
+
+const loginFrameOpened = ref<boolean>(false);
+
+function openLoginFrame() {
+    loginFrameOpened.value = true;
+}
 </script>
