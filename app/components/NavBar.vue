@@ -85,9 +85,9 @@
                             @close="close" 
                             class="absolute right-0 mt-1 w-full bg-white border rounded shadow-lg z-50"
                         >
-                            <div class="py-1">
+                            <div v-if="!loggedIn" class="py-1">
                                 <NuxtLink
-                                    to="/sign-in"
+                                    to="/login"
                                     class="block w-full py-1 text-center text-sm text-gray-700 hover:!bg-blue-600 hover:text-white focus:outline-none focus-visible:bg-gray-100 focus-visible:text-gray-900"
                                 >
                                     Sign in
@@ -97,6 +97,14 @@
                                     class="block w-full py-1 text-center text-sm text-gray-700 hover:!bg-blue-600 hover:text-white focus:outline-none focus-visible:bg-gray-100 focus-visible:text-gray-900"
                                 >
                                     Sign up
+                                </NuxtLink>
+                            </div>
+                            <div v-else class="py-1">
+                                <NuxtLink
+                                    to="/logout"
+                                    class="block w-full py-1 text-center text-sm text-gray-700 hover:!bg-blue-600 hover:text-white focus:outline-none focus-visible:bg-gray-100 focus-visible:text-gray-900"
+                                >
+                                    Sign out
                                 </NuxtLink>
                             </div>
                         </Menu>
@@ -110,6 +118,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useColorMode } from '#imports'
+import { getLoginState } from '~/services/authService';
 
 const languages = ['en', 'ua'];
 
@@ -117,6 +126,8 @@ const language = ref<string>('en')
 
 const colorMode = useColorMode()
 const isDark = computed(() => colorMode.value === 'dark')
+
+const loggedIn = ref((await getLoginState()).loggedIn);
 
 function toggleTheme() {
   colorMode.preference = isDark.value ? 'light' : 'dark'

@@ -8,7 +8,7 @@
       <!-- Logo area -->
       <div class="mb-8">
         <div class="mx-auto h-14 w-14 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-500 shadow-lg grid place-items-center">
-          <span class="text-white text-xl font-black select-none">S</span>
+          <span class="text-white text-2xl font-black select-none">S</span>
         </div>
         <h1 class="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight">
           Studentus

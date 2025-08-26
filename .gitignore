@@ -17,8 +17,11 @@ logs
 .DS_Store
 .fleet
 .idea
-server
 data
+
+server/api/professors.ts
+server/api/reviews.ts
+server/api/schools.ts
 
 # Local env files
 .env
