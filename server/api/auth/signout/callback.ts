@@ -3,5 +3,8 @@ export default defineEventHandler(async (event) => {
     deleteCookie(event, 'id_token');
     deleteCookie(event, 'refresh_token');
 
-    return sendRedirect(event, '/'); // back to frontend
+    const redirectTo = getSafeRedirectURL(getCookie(event, "redirect_url"));
+    deleteCookie(event, "redirect_url");
+
+    return sendRedirect(event, redirectTo); // back to frontend
 });

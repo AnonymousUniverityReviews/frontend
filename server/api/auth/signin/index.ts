@@ -26,5 +26,12 @@ export default defineEventHandler(async (event) => {
     setCookie(event, 'code_verifier', codeVerifier);
     // setCookie(event, 'pkce_state', state);
 
+    const redirectFrom = sanitizeRedirectURL(getQuery(event).redirect as string);
+    console.log(redirectFrom);
+    setCookie(event, 'redirect_url', redirectFrom, {
+        httpOnly: true,
+        sameSite: 'lax'
+    });
+
     return sendRedirect(event, redirectTo.href);
 });

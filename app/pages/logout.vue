@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
 onMounted(() => {
-    navigateTo('/api/auth/signout', { external: true })
+    const safeFrom = getSafeRedirectURL(history.state.back);
+    navigateTo(`/api/auth/signout?redirect=${safeFrom}`, { external: true })
 })
 </script>
