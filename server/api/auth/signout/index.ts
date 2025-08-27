@@ -1,15 +1,8 @@
 import * as client from 'openid-client';
+import { getOIDCConfig } from '~~/server/utils/oidc';
 
 export default defineEventHandler(async (event) => {
-    const config: client.Configuration = await client.discovery(
-        new URL("http://localhost:8080/.well-known/openid-configuration"),
-        "mvc",
-        undefined,
-        undefined,
-        {
-            execute: [client.allowInsecureRequests]
-        }
-    )
+    const config = await getOIDCConfig();
 
     const id_token_hint = getCookie(event, 'id_token') ?? "";
 
