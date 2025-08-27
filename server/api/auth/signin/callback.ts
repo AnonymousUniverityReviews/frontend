@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     const config = await getOIDCConfig();
 
     const code_verifier = getCookie(event, 'code_verifier');
-    const state = getCookie(event, 'pkce_state');
+    // const state = getCookie(event, 'pkce_state');
 
     let getCurrentUrl = (...args: any): URL => {
         return new URL(getRequestURL(event));
@@ -50,5 +50,8 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    return sendRedirect(event, '/'); // back to frontend
+    const redirectTo = getSafeRedirectURL(getCookie(event, "redirect_url"));
+    deleteCookie(event, "redirect_url");
+
+    return sendRedirect(event, redirectTo); // back to frontend
 });
