@@ -18,7 +18,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode'
   ],
   plugins: [
-    '~/plugins/arco-vue.ts'
+    
   ],
   css: ['~/assets/css/main.css'],
   vite: {
