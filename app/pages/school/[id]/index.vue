@@ -25,7 +25,9 @@
                         ></Icon>
                     </NuxtLink>
                 </div>
+
                 <NuxtLink
+                    v-if="session.authorized"
                     :to="{ name: 'school-id-rate', params: { id: route.params.id } }"
                     class="inline-flex items-center gap-x-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-100 !bg-gray-600 dark:!bg-blue-900 hover:!bg-gray-950 dark:hover:!bg-blue-950 transition"
                 >
@@ -35,6 +37,18 @@
                         class="text-xl align-middle"
                     ></Icon>
                 </NuxtLink>
+                <div
+                    v-else
+                    class="inline-flex items-center gap-x-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-100 !bg-gray-600 dark:!bg-blue-900 hover:!bg-gray-950 dark:hover:!bg-blue-950 transition cursor-pointer"
+                    @click="openLoginFrame"
+                >
+                    Rate
+                    <Icon 
+                        name="mdi-light:thumbs-up-down"
+                        class="text-xl align-middle"
+                    ></Icon>
+                </div>
+
                 <NuxtLink
                     href="#"
                     class="inline-flex items-center gap-x-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-100 !bg-gray-600 dark:!bg-blue-900 hover:!bg-gray-950 dark:hover:!bg-blue-950 transition"
@@ -107,10 +121,16 @@ import {
     initTooltips 
 } from 'flowbite'
 import { getSchoolById, getReviews } from '~/services/searchService';
+import { useSessionStore } from '#imports';
 import type { Review, School } from '~/types';
 import { displayedRatingColors } from "~/constants/colors";
 import { displayedRatingIcons } from '~/constants/icons';
 import SchoolReview from '~/components/reviews/SchoolReview.vue';
+
+const session = useSessionStore();
+
+const { openLoginFrame } = inject('loginFrame');
+
 const route = useRoute()
 
 const scrolled = ref(false)
