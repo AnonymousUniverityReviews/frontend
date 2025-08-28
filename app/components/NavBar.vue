@@ -84,7 +84,7 @@
                             @close="close" 
                             class="absolute left-0 mt-1 w-full bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg z-50"
                         >
-                            <div v-if="!loggedIn" class="py-1">
+                            <div v-if="!session.authorized" class="py-1">
                                 <NuxtLink
                                     to="/login"
                                     class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
@@ -126,9 +126,7 @@ const languages = ['en', 'ua'];
 const language = ref<string>('en')
 
 const colorMode = useColorMode()
-const isDark = computed(() => colorMode.value === 'dark')
-
-const loggedIn = ref(session.authorized);
+const isDark = computed(() => colorMode.value === 'dark');
 
 function toggleTheme() {
   colorMode.preference = isDark.value ? 'light' : 'dark'
