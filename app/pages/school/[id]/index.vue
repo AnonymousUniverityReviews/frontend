@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-        <NavBar class="h-14" />
+        <NavBar class="h-16" />
         <!-- School basic info header -->
         <nav
             class="w-full border-b border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/70 text-gray-900 dark:text-gray-100 backdrop-blur sticky top-14 z-40"

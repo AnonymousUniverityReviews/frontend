@@ -1,45 +1,46 @@
 <template>
     <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-        <NavBar class="h-14" />
-        <div class="flex flex-col w-full items-center mb-4">
-            <h1>Schools search</h1>
-            <SearchBar 
-                v-model="search"
-                v-on:submit="getPageData"
-                class="w-[60%]"
-            >
-            </SearchBar>
+        <NavBar class="h-16" />
+
+        <!-- Header -->
+        <div class="flex flex-col w-full items-center mb-8 mt-10">
+            <h1 class="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent mb-6">
+                Schools Search
+            </h1>
+            <div class="flex w-[60%] rounded-xl">
+                <SearchBar 
+                    v-model="search"
+                    v-on:submit="getPageData"
+                    class="flex-1 px-3 py-2"
+                />
+            </div>
         </div>
+
+        <!-- Controls -->
         <div class="flex flex-col w-[80%] mx-auto mb-8">
-            <!-- Header -->
-            <div class="flex flex-row w-full justify-between items-center mb-2">
-                <div class="flex flex-row w-max justify-between items-center gap-4">
-                    <p>Schools per page</p>
+            <div class="flex flex-row w-full justify-between items-center mb-4">
+                <div class="flex flex-row gap-3 items-center">
+                    <p class="text-sm font-semibold">Schools per page</p>
                     <Dropdown>
-                        <!-- Custom button -->
                         <template #button="{ opened, toggle }">
                             <button 
                                 @click="toggle"
-                                class="inline-flex w-12 items-center justify-center gap-x-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-2 py-1 text-sm focus:outline-none focus:ring focus:ring-blue-500"
+                                class="inline-flex w-14 items-center justify-center gap-x-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-2 py-1 text-sm font-medium shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700"
                             >
                                 {{ pageSize }}
-                                <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="-mr-1 size-5 text-gray-400">
+                                <svg viewBox="0 0 20 20" fill="currentColor" class="-mr-1 size-5 text-gray-400">
                                     <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                                 </svg>
                             </button>
                         </template>
 
-                        <!-- Menu items -->
                         <template #menu="{ close }">
-                            <Menu 
-                                @close="close" 
-                                class="absolute left-0 mt-1 w-12 bg-white border rounded shadow-lg z-50"
-                            >
+                            <Menu @close="close" class="absolute left-0 mt-1 w-14 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg z-50">
                                 <div class="py-1">
                                     <p
                                         v-for="possibleSize in possiblePageSizes"
                                         :key="possibleSize"
-                                        class="block w-full py-1 text-center text-sm text-gray-700 hover:!bg-blue-600 hover:text-white focus:outline-none focus-visible:bg-gray-100 focus-visible:text-gray-900 select-none cursor-pointer"
+                                        class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                         @click="changePageSize(possibleSize), close()"
                                     >
                                         {{ possibleSize }}
@@ -49,76 +50,53 @@
                         </template>
                     </Dropdown>
                 </div>
-                <p>Page {{ page }}/{{ totalPages }}</p>
+                <p class="text-sm font-medium">Page {{ page }}/{{ totalPages }}</p>
             </div>
+
             <!-- Paginator top -->
             <Paginator 
                 v-model="page" 
                 :total-pages="totalPages" 
                 :link-maker="(page) => { return { path: '/school', query: { search: search, pageSize: pageSize, page: page } } }"
-            >
-            </Paginator>
+            />
+
             <!-- Schools -->
-            <div
-                class="flex flex-col w-full gap-2 my-4"
-            >
-                <NuxtLink
-                    :to="{ name: 'school-id', params: { id: school.id } }"
+            <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-6">
+                <SchoolSearchBlock 
                     v-for="school in schools"
-                    :ket="school.id"
-                    class="flex flex-row border-1 p-3 justify-between rounded-xl"
-                >
-                    <div class="flex flex-col gap-1">
-                        <h2
-                            class="text-xl font-bold"
-                        >
-                            {{ school.name }}
-                        </h2>
-                        <p
-                            class="text-gray-500 dark:text-gray-300"
-                        >
-                            {{ school.address }}
-                        </p>
-                    </div>
-                    <div>
-                        <p
-                            class="text-gray-900 text-2xl text-center py-2 px-1 font-black"
-                            :class="school.overallRating as number >= 1 ? displayedRatingColors[Math.floor(school.overallRating as number) - 1] : 'dark:text-gray-100'"
-                        >
-                            {{ school.overallRating?.toFixed(2) }}
-                        </p>
-                    </div>
-                </NuxtLink>
-                <div
-                    v-if="total === 0"
-                    class="mx-auto text-xl text-gray-500 dark:text-gray-300"
-                >
+                    :school="school"
+                    :key="school.id"
+                ></SchoolSearchBlock>
+
+                <div v-if="total === 0" class="mx-auto text-xl text-gray-500 dark:text-gray-300 col-span-full">
                     Nothing here...
                 </div>
             </div>
+
             <!-- Paginator bottom -->
             <Paginator 
                 v-model="page" 
                 :total-pages="totalPages" 
                 :link-maker="(page) => { return { path: '/school', query: { search: search, pageSize: pageSize, page: page } } }"
-            >
-            </Paginator>
+            />
         </div>
     </div>
 </template>
 
+
 <script setup lang="ts">
-import { displayedRatingColors } from '~/constants/colors';
 import { getSchools } from '~/services/searchService'
 import type { School } from '~/types';
+
+import SchoolSearchBlock from '~/components/searchBlocks/SchoolSearchBlock.vue';
 
 const route = useRoute()
 
 const search = ref<string>(route.query.search as string ?? "");
 
 const page = ref<number>(+(route.query.page ?? 1));
-const possiblePageSizes = [1, 3, 5, 10, 20];
-const pageSize = ref<number>(+(route.query.pageSize ?? 5));
+const possiblePageSizes = [1, 3, 6, 12, 24];
+const pageSize = ref<number>(+(route.query.pageSize ?? 6));
 
 watch(() => route.query, () => {
     search.value = (route.query.search as string) ?? "";
