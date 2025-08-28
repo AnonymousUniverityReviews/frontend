@@ -6,7 +6,7 @@
         <div class="flex flex-row max-w-6xl mx-auto px-4 py-3 justify-between items-center">
             <!-- Left: Catalog link -->
             <div class="flex items-center gap-6">
-                <NuxtLink to="/catalog" class="text-base font-semibold hover:text-blue-600 transition">
+                <NuxtLink to="/catalog" class="text-base text-lg font-semibold hover:text-blue-600 transition">
                     Catalog
                 </NuxtLink>
             </div>
@@ -20,7 +20,7 @@
                     <template #button="{ opened, toggle }">
                         <button 
                             @click="toggle"
-                            class="inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-2 py-1 text-sm focus:outline-none focus:ring focus:ring-blue-500"
+                            class="inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-2 py-1 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-800 focus:outline-none focus:ring focus:ring-blue-500"
                         >
                             {{ language.toUpperCase() }}
                             <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="-mr-1 size-5 text-gray-400">
@@ -33,18 +33,17 @@
                     <template #menu="{ close }">
                         <Menu 
                             @close="close" 
-                            class="absolute right-0 mt-1 w-full bg-white border rounded shadow-lg z-50"
+                            class="absolute left-0 mt-1 w-full bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg z-50"
                         >
                             <div class="py-1">
-                                <a 
-                                    href="#"
-                                    class="block w-full py-1 text-center text-sm text-gray-700 hover:!bg-blue-600 hover:text-white focus:outline-none focus-visible:bg-gray-100 focus-visible:text-gray-900"
+                                <p
+                                    class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                     v-for="lang in languages" 
                                     :key="lang" 
                                     @click="setLanguage(lang), close()"
                                 >
                                     {{ lang.toUpperCase() }}
-                                </a>
+                                </p>
                             </div>
                         </Menu>
                     </template>
@@ -83,18 +82,18 @@
                     <template #menu="{ close }">
                         <Menu 
                             @close="close" 
-                            class="absolute right-0 mt-1 w-full bg-white border rounded shadow-lg z-50"
+                            class="absolute left-0 mt-1 w-full bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg z-50"
                         >
                             <div v-if="!loggedIn" class="py-1">
                                 <NuxtLink
                                     to="/login"
-                                    class="block w-full py-1 text-center text-sm text-gray-700 hover:!bg-blue-600 hover:text-white focus:outline-none focus-visible:bg-gray-100 focus-visible:text-gray-900"
+                                    class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
                                     Sign in
                                 </NuxtLink>
                                 <NuxtLink
                                     to="/sign-up"
-                                    class="block w-full py-1 text-center text-sm text-gray-700 hover:!bg-blue-600 hover:text-white focus:outline-none focus-visible:bg-gray-100 focus-visible:text-gray-900"
+                                    class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
                                     Sign up
                                 </NuxtLink>
@@ -102,7 +101,7 @@
                             <div v-else class="py-1">
                                 <NuxtLink
                                     to="/logout"
-                                    class="block w-full py-1 text-center text-sm text-gray-700 hover:!bg-blue-600 hover:text-white focus:outline-none focus-visible:bg-gray-100 focus-visible:text-gray-900"
+                                    class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
                                     Sign out
                                 </NuxtLink>

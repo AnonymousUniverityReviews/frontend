@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <!-- NAVBAR -->
-    <NavBar class="h-14" />
+    <NavBar class="h-16" />
 
     <!-- MAIN -->
     <main class="flex-grow flex flex-col items-center justify-center px-4 py-16 text-center">
