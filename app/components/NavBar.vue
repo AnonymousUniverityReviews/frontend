@@ -117,7 +117,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useColorMode } from '#imports'
-import { getLoginState } from '~/services/authService';
+import { useSessionStore } from '~/stores/session';
+
+const session = useSessionStore();
 
 const languages = ['en', 'ua'];
 
@@ -126,7 +128,7 @@ const language = ref<string>('en')
 const colorMode = useColorMode()
 const isDark = computed(() => colorMode.value === 'dark')
 
-const loggedIn = ref((await getLoginState()).loggedIn);
+const loggedIn = ref(session.authorized);
 
 function toggleTheme() {
   colorMode.preference = isDark.value ? 'light' : 'dark'
