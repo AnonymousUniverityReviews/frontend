@@ -6,7 +6,7 @@
         <div class="flex flex-row max-w-6xl mx-auto px-4 py-3 justify-between items-center">
             <!-- Left: Catalog link -->
             <div class="flex items-center gap-6">
-                <NuxtLink to="/catalog" class="text-base text-lg font-semibold hover:text-blue-600 transition">
+                <NuxtLink to="/catalog" class="text-lg font-semibold hover:text-blue-600 transition">
                     Catalog
                 </NuxtLink>
             </div>
