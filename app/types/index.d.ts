@@ -53,6 +53,27 @@ export interface Post {
     comments?: Comment[]
 }
 
+export interface ReviewMessage {
+    authorId: number
+    review: string
+    ratings: {
+        social: number,
+        opportunities: number,
+        clubs: number,
+        reputation: number,
+        happiness: number,
+        location: number,
+        facilities: number,
+        food: number,
+        internet: number,
+        safety: number
+    }
+    for: {
+        type: "school" | "faculty" | "professor"
+        id: number
+    }
+}
+
 export interface Review {
     id: number
     authorId: number
