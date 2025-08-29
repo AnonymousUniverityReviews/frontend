@@ -106,7 +106,7 @@
                 :review="review"
             ></SchoolReview>
             <button 
-                v-if="cursor >= 0" 
+                v-if="cursor >= 0 && reviews.length < school.reviewsAmount" 
                 @click="getMoreReviews"
                 class="px-4 py-2 w-auto !text-base rounded-full text-gray-100 bg-gray-700 cursor-pointer"
             >
