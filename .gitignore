@@ -19,11 +19,7 @@ logs
 .idea
 data
 
-server/api/professors.ts
-server/api/reviews.ts
-server/api/schools.ts
-server/api/get-review.ts
-server/api/submit-review.ts
+server/api/*.ts
 
 # Local env files
 .env
