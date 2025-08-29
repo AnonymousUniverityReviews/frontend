@@ -1,5 +1,5 @@
 <template>
-<div class="bg-gray-100 dark:bg-gray-800">
+<div class="bg-gray-100 dark:bg-gray-800 w-full">
     <div class="flex flex-row w-[95%] px-4 py-4">
         <!-- Overall -->
         <span class="flex flex-col w-[10%] justify-start items-center px-4">
