@@ -44,7 +44,7 @@ import { hoverRatingColors, activeRatingColors } from "~/constants/colors";
 import { ratingTexts } from "~/constants/ratings";
 
 // v-model support
-const model = defineModel({ type: Number, default: 0 });
+const model = defineModel<number>({ default: 0 });
 
 const inputSize = 5;
 
@@ -92,4 +92,12 @@ function getColor(i: number): string {
     }
     return "";
 }
+
+function init() {
+  selectedId.value = model.value - 1;
+  updateRatingText(selectedId.value);
+  hoveredId.value = -1;
+}
+
+init();
 </script>
