@@ -111,7 +111,7 @@
                 class="px-4 py-2 w-auto !text-base rounded-full text-gray-100 bg-gray-700 cursor-pointer"
             >
                 Load more
-            </button>  
+            </button>
         </div>   
     </div>
 </template>
