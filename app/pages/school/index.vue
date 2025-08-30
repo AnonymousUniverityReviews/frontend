@@ -86,7 +86,7 @@
 
 <script setup lang="ts">
 import { getSchools } from '~/services/searchService'
-import type { School } from '~/types';
+import type { School } from '~/types/ratings';
 
 import SchoolSearchBlock from '~/components/searchBlocks/SchoolSearchBlock.vue';
 

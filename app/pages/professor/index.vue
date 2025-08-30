@@ -131,7 +131,7 @@
 <script setup lang="ts">
 import { displayedRatingColors } from '~/constants/colors';
 import { getSchools } from '~/services/searchService'
-import type { School } from '~/types';
+import type { School } from '~/types/ratings';
 
 const route = useRoute()
 

@@ -119,7 +119,7 @@ import {
     initTooltips 
 } from 'flowbite'
 import { displayedRatingColors } from "~/constants/colors";
-import type { Review } from '~/types';
+import type { Review } from '~/types/review';
 import RatingPreview from "../ratings/RatingPreview.vue";
 
 const { review } = defineProps<{ review: Review }>();

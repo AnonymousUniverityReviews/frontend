@@ -122,7 +122,8 @@ import {
 } from 'flowbite'
 import { getSchoolById, getReviews } from '~/services/searchService';
 import { useSessionStore } from '#imports';
-import type { Review, School } from '~/types';
+import type { School } from '~/types/ratings';
+import type { Review } from '~/types/review';
 import { displayedRatingColors } from "~/constants/colors";
 import { displayedRatingIcons } from '~/constants/icons';
 import SchoolReview from '~/components/reviews/SchoolReview.vue';

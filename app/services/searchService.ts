@@ -1,5 +1,6 @@
 import { api } from "~/services/api";
-import type { School, Professor, Review } from "~/types";
+import type { School, Professor } from "~/types/ratings";
+import type { Review } from '~/types/review';
 
 function getData(dataType: string = "schools", search: string = "", searchType: string = "basic", page: number = 1, pageSize: number = 3) {
     return api(`/${dataType}?search=${search}&searchType=${searchType}&page=${page}&pageSize=${pageSize}`)

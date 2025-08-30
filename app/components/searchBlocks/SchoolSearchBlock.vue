@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { displayedRatingColors } from '~/constants/colors';
-import type { School } from '~/types';
+import type { School } from '~/types/ratings';
 
 const { school } = defineProps<{
     school: School

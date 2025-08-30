@@ -79,7 +79,8 @@
 import { useSessionStore } from '#imports';
 import { getSchoolById } from '~/services/searchService';
 import { getReviewByAuthorID, submitReview } from '~/services/reviewService';
-import type { ReviewMessage, School } from '~/types';
+import type { School } from '~/types/ratings';
+import type { ReviewMessage } from '~/types/review';
 import RatingInput from '~/components/ratings/RatingInput.vue';
 const session = useSessionStore();
 
