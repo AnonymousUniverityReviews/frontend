@@ -1,0 +1,1 @@
+export const pageObjects = ["school", "faculty", "professor"];
