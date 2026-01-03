@@ -61,6 +61,15 @@
                     <span v-else>☀️</span>
                 </button>
 
+                <!-- Request Button -->
+                <button
+                    id="add-uni"
+                    @click="$router.push('/uni-request')"
+                    class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+                >
+                    Add University
+                </button>
+
                 <!-- Account Menu -->
                 <label class="sr-only" for="account">Account</label>
                 <Dropdown id="account" class="inline-block">
