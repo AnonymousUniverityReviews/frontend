@@ -11,13 +11,14 @@
             <form class="space-y-8" @submit.prevent="onSubmit">
                 <!-- University Name -->
                 <div>
-                    <label :class="['block mb-2 font-semibold transition-colors duration-200',
+                    <label for="uniName" :class="['block mb-2 font-semibold transition-colors duration-200',
                         errors.universityName ? formColors.labelError : formColors.labelDefault]"
                     >
                         Enter university name
                     </label>
                     <input
                         v-model="form.universityName"
+                        id="uniName"
                         maxlength="201"
                         type="text"
                         placeholder="Taras Shevchenko National University of Kyiv"
@@ -28,20 +29,21 @@
                                 : formColors.inputBorderDefault + ' ' + formColors.ringDefault
                         ]"
                     />
-                    <p v-if="errors.universityName" :class="['mt-1 pl-2 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
-                        {{ errors.universityName }}
+                    <p v-if="errors.universityName" :class="['flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
+                        <Icon name="mdi:alert-circle-outline" class="text-sm"/>{{ errors.universityName }}
                     </p>
                 </div>
 
                 <!-- Email Domain -->
                 <div>
-                    <label :class="['block mb-2 font-semibold transition-colors duration-200',
+                    <label for="emailDomain" :class="['block mb-2 font-semibold transition-colors duration-200',
                         errors.emailDomain ? formColors.labelError : formColors.labelDefault]"
                     >
                         Enter email domain
                     </label>
                     <input
                         v-model="form.emailDomain"
+                        id="emailDomain"
                         type="text"
                         placeholder="@knu.ua"
                         :class="['w-full px-5 py-2.5 pr-12 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm',
@@ -51,18 +53,19 @@
                                 : formColors.inputBorderDefault + ' ' + formColors.ringDefault
                         ]"
                     />
-                    <p v-if="errors.emailDomain" :class="['mt-1 pl-2 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
-                        {{ errors.emailDomain }}
+                    <p v-if="errors.emailDomain" :class="['flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
+                        <Icon name="mdi:alert-circle-outline" class="text-sm"/>{{ errors.emailDomain }}
                     </p>
                 </div>
 
                 <!-- Comment -->
                 <div>
-                    <label :class="['block mb-2 font-semibold transition-colors duration-200', formColors.labelDefault]">
+                    <label for="comment" :class="['block mb-2 font-semibold transition-colors duration-200', formColors.labelDefault]">
                         Enter comment (optional)
                     </label>
                     <input
                         v-model="form.comment"
+                        id="comment"
                         type="text"
                         placeholder="Comment"
                         :class="['w-full px-5 py-2.5 pr-12 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm', 
