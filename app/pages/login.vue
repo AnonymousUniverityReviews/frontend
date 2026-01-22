@@ -5,7 +5,7 @@
         <!-- MAIN -->
         <main class="flex-grow flex flex-col items-center justify-center px-4 py-16">
 
-            <div class ="w-full max-w-md rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-xl transition-colors duration-200">
+            <div class ="w-full max-w-md rounded-2xl bg-gray-100 dark:bg-gray-800 p-8 shadow-xl transition-colors duration-200">
                 <h1 class="text-2xl font-semibold text-center mb-6 transition">
                 Sign in
             </h1>
@@ -40,12 +40,15 @@
                             bg-gray-50 dark:bg-gray-800 border border-gray-300 hover:border-gray-400 dark:border-gray-600 focus:ring-1 focus:ring-blue-500"
                     />
                 </div>
+                <div class="text-center text-gray-900 dark:text-white">
                     <button
                         type="submit"
-                        class="w-full mt-4 py-3 rounded-2xl disabled:opacity-60 disabled:cursor-not-allowed bg-blue-500 hover:bg-blue-700 text-white transition"
+                        class="w-full mt-4 mb-4 py-3 rounded-2xl disabled:opacity-60 disabled:cursor-not-allowed bg-blue-500 hover:bg-blue-700 text-white transition"
                     >
                         Continue
                     </button>
+                    <p>Don't have an account? <a href="/sign-up" class="text-blue-500 font-bold hover:underline">Sign up</a></p>
+                </div>
             </form>
             </div>
         </main>
