@@ -3,100 +3,102 @@
         <NavBar class="h-16 transition-colors duration-200" />
 
 
-        <main class="w-full max-w-fit mx-auto px-4 py-16"> <!-- max-w-1/2 щоб було як в дизайні -->
-            <h1 class="text-2xl font-semibold text-center mb-10 transition">
-                Submit a request to add an university
-            </h1>
+        <main class="grow flex flex-col items-center justify-center px-4 py-16">
+            <div class="w-full max-w-md rounded-2xl">
+                <h1 class="text-2xl font-semibold text-center mb-10 transition">
+                    Submit a request to add an university
+                </h1>
 
-            <form class="space-y-8" @submit.prevent="onSubmit">
-                <!-- University Name -->
-                <div>
-                    <label for="uniName" :class="['block mb-2 font-semibold transition-colors duration-200',
-                        errors.universityName ? formColors.labelError : formColors.labelDefault]"
-                    >
-                        Enter university name
-                    </label>
-                    <input
-                        v-model="form.universityName"
-                        id="uniName"
-                        :maxlength="UNIVERSITY_NAME_MAX"
-                        type="text"
-                        placeholder="Taras Shevchenko National University of Kyiv"
-                        :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm', 
-                            formColors.inputBg,
-                            errors.universityName
-                                ? formColors.inputBorderError + ' ' + formColors.ringError
-                                : formColors.inputBorderDefault + ' ' + formColors.ringDefault
-                        ]"
-                    />
-                    <p v-if="isLimitReached"
-                    class="flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200 text-yellow-600 dark:text-yellow-400">
-                        <Icon name="mdi:alert-circle-outline" class="text-sm"/> Maximum {{ UNIVERSITY_NAME_MAX }} characters
-                    </p>
+                <form class="space-y-8" @submit.prevent="onSubmit">
+                    <!-- University Name -->
+                    <div>
+                        <label for="uniName" :class="['block mb-2 font-semibold transition-colors duration-200',
+                            errors.universityName ? formColors.labelError : formColors.labelDefault]"
+                        >
+                            Enter university name
+                        </label>
+                        <input
+                            v-model="form.universityName"
+                            id="uniName"
+                            :maxlength="UNIVERSITY_NAME_MAX"
+                            type="text"
+                            placeholder="Taras Shevchenko National University of Kyiv"
+                            :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm', 
+                                formColors.inputBg,
+                                errors.universityName
+                                    ? formColors.inputBorderError + ' ' + formColors.ringError
+                                    : formColors.inputBorderDefault + ' ' + formColors.ringDefault
+                            ]"
+                        />
+                        <p v-if="isLimitReached"
+                        class="flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200 text-yellow-600 dark:text-yellow-400">
+                            <Icon name="mdi:alert-circle-outline" class="text-sm"/> Maximum {{ UNIVERSITY_NAME_MAX }} characters
+                        </p>
 
-                    <p v-if="errors.universityName" 
-                    :class="['flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
-                        <Icon name="mdi:alert-circle-outline" class="text-sm"/>{{ errors.universityName }}
-                    </p>
-                </div>
+                        <p v-if="errors.universityName" 
+                        :class="['flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
+                            <Icon name="mdi:alert-circle-outline" class="text-sm"/>{{ errors.universityName }}
+                        </p>
+                    </div>
 
-                <!-- Email Domain -->
-                <div>
-                    <label for="emailDomain" :class="['block mb-2 font-semibold transition-colors duration-200',
-                        errors.emailDomain ? formColors.labelError : formColors.labelDefault]"
-                    >
-                        Enter email domain
-                    </label>
-                    <input
-                        v-model="form.emailDomain"
-                        id="emailDomain"
-                        type="text"
-                        placeholder="@knu.ua"
-                        :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm',
-                            formColors.inputBg,
-                            errors.emailDomain
-                                ? formColors.inputBorderError + ' ' + formColors.ringError
-                                : formColors.inputBorderDefault + ' ' + formColors.ringDefault
-                        ]"
-                    />
-                    <p v-if="errors.emailDomain" 
-                    :class="['flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
-                        <Icon name="mdi:alert-circle-outline" class="text-sm"/>{{ errors.emailDomain }}
-                    </p>
-                </div>
+                    <!-- Email Domain -->
+                    <div>
+                        <label for="emailDomain" :class="['block mb-2 font-semibold transition-colors duration-200',
+                            errors.emailDomain ? formColors.labelError : formColors.labelDefault]"
+                        >
+                            Enter email domain
+                        </label>
+                        <input
+                            v-model="form.emailDomain"
+                            id="emailDomain"
+                            type="text"
+                            placeholder="@knu.ua"
+                            :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm',
+                                formColors.inputBg,
+                                errors.emailDomain
+                                    ? formColors.inputBorderError + ' ' + formColors.ringError
+                                    : formColors.inputBorderDefault + ' ' + formColors.ringDefault
+                            ]"
+                        />
+                        <p v-if="errors.emailDomain" 
+                        :class="['flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
+                            <Icon name="mdi:alert-circle-outline" class="text-sm"/>{{ errors.emailDomain }}
+                        </p>
+                    </div>
 
-                <!-- Comment -->
-                <div>
-                    <label for="comment" :class="['block mb-2 font-semibold transition-colors duration-200', formColors.labelDefault]">
-                        Enter comment (optional)
-                    </label>
-                    <textarea
-                        v-model="form.comment"
-                        :maxlength="COMMENT_MAX"
-                        id="comment"
-                        type="text"
-                        placeholder="Comment"
-                        :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm resize-none field-sizing-content', 
-                            formColors.inputBg, formColors.inputBorderDefault, formColors.ringDefault
-                        ]"
-                    />
-                    <p :class="['mt-1 ml-2 text-xs font-semibold transition-colors duration-200',
-                        isCommentLimitReached ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-500 dark:text-gray-600',
-                        ]">
-                        {{ form.comment.length }}/{{ COMMENT_MAX }}
-                    </p>
-                </div>
+                    <!-- Comment -->
+                    <div>
+                        <label for="comment" :class="['block mb-2 font-semibold transition-colors duration-200', formColors.labelDefault]">
+                            Enter comment (optional)
+                        </label>
+                        <textarea
+                            v-model="form.comment"
+                            :maxlength="COMMENT_MAX"
+                            id="comment"
+                            type="text"
+                            placeholder="Comment"
+                            :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm resize-none field-sizing-content', 
+                                formColors.inputBg, formColors.inputBorderDefault, formColors.ringDefault
+                            ]"
+                        />
+                        <p :class="['mt-1 ml-2 text-xs font-semibold transition-colors duration-200',
+                            isCommentLimitReached ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-500 dark:text-gray-600',
+                            ]">
+                            {{ form.comment.length }}/{{ COMMENT_MAX }}
+                        </p>
+                    </div>
 
-                <div class="flex justify-center pt-6">
-                    <button
-                        type="submit"
-                        :disabled="isSubmitting"
-                        class="px-5 py-3 pr-12 pl-12 rounded-2xl disabled:opacity-60 disabled:cursor-not-allowed bg-blue-500 hover:bg-blue-700 text-white transition"
-                    >
-                        {{ isSubmitting ? 'Sending...' : 'Send' }}
-                    </button>
-                </div>
-            </form>
+                    <div class="flex justify-center pt-2">
+                        <button
+                            type="submit"
+                            :disabled="isSubmitting"
+                            class="px-5 py-3 pr-12 pl-12 rounded-2xl disabled:opacity-60 disabled:cursor-not-allowed bg-blue-500 hover:bg-blue-700 text-white transition"
+                        >
+                            {{ isSubmitting ? 'Sending...' : 'Send' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </main>
 
         <!-- FOOTER -->
