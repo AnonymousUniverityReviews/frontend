@@ -70,15 +70,21 @@
                     <label for="comment" :class="['block mb-2 font-semibold transition-colors duration-200', formColors.labelDefault]">
                         Enter comment (optional)
                     </label>
-                    <input
+                    <textarea
                         v-model="form.comment"
+                        :maxlength="COMMENT_MAX"
                         id="comment"
                         type="text"
                         placeholder="Comment"
-                        :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm', 
+                        :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm resize-none field-sizing-content', 
                             formColors.inputBg, formColors.inputBorderDefault, formColors.ringDefault
                         ]"
                     />
+                    <p :class="['mt-1 ml-2 text-xs font-semibold transition-colors duration-200',
+                        isCommentLimitReached ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-500 dark:text-gray-600',
+                        ]">
+                        {{ form.comment.length }}/{{ COMMENT_MAX }}
+                    </p>
                 </div>
 
                 <div class="flex justify-center pt-6">
@@ -137,6 +143,11 @@ const UNIVERSITY_NAME_MAX = 200
 
 const isLimitReached = computed(() => {
   return form.universityName.length >= UNIVERSITY_NAME_MAX
+})
+
+const COMMENT_MAX = 600
+const isCommentLimitReached = computed(() => {
+  return form.comment.length >= COMMENT_MAX
 })
 
 const forbiddenUniversityNameRe =
