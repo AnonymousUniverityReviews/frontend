@@ -19,7 +19,7 @@
                     <input
                         v-model="form.universityName"
                         id="uniName"
-                        maxlength="201"
+                        :maxlength="UNIVERSITY_NAME_MAX"
                         type="text"
                         placeholder="Taras Shevchenko National University of Kyiv"
                         :class="['w-full px-5 py-2.5 pr-12 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm', 
