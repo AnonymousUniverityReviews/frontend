@@ -22,14 +22,20 @@
                         :maxlength="UNIVERSITY_NAME_MAX"
                         type="text"
                         placeholder="Taras Shevchenko National University of Kyiv"
-                        :class="['w-full px-5 py-2.5 pr-12 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm', 
+                        :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm', 
                             formColors.inputBg,
                             errors.universityName
                                 ? formColors.inputBorderError + ' ' + formColors.ringError
                                 : formColors.inputBorderDefault + ' ' + formColors.ringDefault
                         ]"
                     />
-                    <p v-if="errors.universityName" :class="['flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
+                    <p v-if="isLimitReached"
+                    class="flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200 text-yellow-600 dark:text-yellow-400">
+                        <Icon name="mdi:alert-circle-outline" class="text-sm"/> Maximum {{ UNIVERSITY_NAME_MAX }} characters
+                    </p>
+
+                    <p v-if="errors.universityName" 
+                    :class="['flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
                         <Icon name="mdi:alert-circle-outline" class="text-sm"/>{{ errors.universityName }}
                     </p>
                 </div>
@@ -46,14 +52,15 @@
                         id="emailDomain"
                         type="text"
                         placeholder="@knu.ua"
-                        :class="['w-full px-5 py-2.5 pr-12 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm',
+                        :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm',
                             formColors.inputBg,
                             errors.emailDomain
                                 ? formColors.inputBorderError + ' ' + formColors.ringError
                                 : formColors.inputBorderDefault + ' ' + formColors.ringDefault
                         ]"
                     />
-                    <p v-if="errors.emailDomain" :class="['flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
+                    <p v-if="errors.emailDomain" 
+                    :class="['flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200', formColors.helperErrorText]">
                         <Icon name="mdi:alert-circle-outline" class="text-sm"/>{{ errors.emailDomain }}
                     </p>
                 </div>
@@ -68,7 +75,7 @@
                         id="comment"
                         type="text"
                         placeholder="Comment"
-                        :class="['w-full px-5 py-2.5 pr-12 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm', 
+                        :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm', 
                             formColors.inputBg, formColors.inputBorderDefault, formColors.ringDefault
                         ]"
                     />
@@ -128,6 +135,10 @@ const showSuccessModal = ref(false)
 
 const UNIVERSITY_NAME_MAX = 200
 
+const isLimitReached = computed(() => {
+  return form.universityName.length >= UNIVERSITY_NAME_MAX
+})
+
 const forbiddenUniversityNameRe =
     /[!?<>\\/@#$€₽₴%_^*=~`{}[\]]|[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u
 
@@ -140,15 +151,11 @@ function validate() {
     if (!form.universityName.trim()) {
         errors.universityName = 'Please enter name of the university'
         valid = false
-    } else {
-        if (form.universityName.trim().length > UNIVERSITY_NAME_MAX) {
-            errors.universityName = 'University name must be at most ${UNIVERSITY_NAME_MAX} characters'
-            valid = false
-        } else if (forbiddenUniversityNameRe.test(form.universityName.trim())) {
-            errors.universityName = 'University name contains invalid characters'
-            valid = false
-        }
+    } else if (forbiddenUniversityNameRe.test(form.universityName.trim())) {
+        errors.universityName = 'University name contains invalid characters'
+        valid = false
     }
+
     
     if (!form.emailDomain.trim()) {
         errors.emailDomain = 'Please enter a valid email domain'
