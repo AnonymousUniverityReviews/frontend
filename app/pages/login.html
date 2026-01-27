@@ -5,13 +5,12 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Sign In</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' href='./login.css'>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+    <body class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
 
         <!-- MAIN -->
-        <main class="flex-grow flex flex-col items-center justify-center px-4 py-16">
+        <main class="grow flex flex-col items-center justify-center px-4 py-16">
 
             <div class ="w-full max-w-md rounded-2xl bg-gray-100 dark:bg-gray-800 p-8 shadow-xl transition-colors duration-200">
                 <h1 class="text-2xl font-semibold text-center mb-6 transition">
@@ -58,7 +57,6 @@
                     <p>Don't have an account? <a href="/sign-up" class="text-blue-500 font-bold hover:underline">Sign up</a></p>
                 </div>
             </form>
-            </div>
         </main>
 
         <!-- FOOTER -->
@@ -67,6 +65,5 @@
                 © 2026 Studentus. All rights reserved.
             </p>
         </footer>
-    </div>
-</body>
+    </body>
 </html>
