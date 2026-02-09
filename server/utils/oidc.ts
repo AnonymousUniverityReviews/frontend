@@ -5,6 +5,11 @@ let cachedConfig: client.Configuration | null = null;
 export async function getOIDCConfig() {
     if (!cachedConfig) {
         const { oidc } = useRuntimeConfig();
+
+        if (process.env.NODE_ENV === 'development') {
+            process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+        }
+
         cachedConfig = await client.discovery(
             new URL(oidc.issuer),
             oidc.clientId,

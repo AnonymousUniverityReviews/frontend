@@ -94,26 +94,26 @@
                             class="absolute left-0 mt-1 w-full bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg z-50"
                         >
                             <div v-if="!session.authorized" class="py-1">
-                                <NuxtLink
-                                    to="/login"
+                                <div
+                                    @click="navigateToSignIn"
                                     class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
                                     Sign in
-                                </NuxtLink>
-                                <NuxtLink
-                                    to="/sign-up"
+                                </div>
+                                <div
+                                    @click="navigateToSignUp"
                                     class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
                                     Sign up
-                                </NuxtLink>
+                                </div>
                             </div>
                             <div v-else class="py-1">
-                                <NuxtLink
-                                    to="/logout"
+                                <div
+                                    @click="navigateToSignOut"
                                     class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
                                     Sign out
-                                </NuxtLink>
+                                </div>
                             </div>
                         </Menu>
                     </template>
@@ -143,5 +143,17 @@ function toggleTheme() {
 
 function setLanguage(lang: string) {
     language.value = lang;
+}
+
+function navigateToSignIn() {
+    navigateTo(`/api/auth/signin`, { external: true });
+}
+
+function navigateToSignUp() {
+    navigateTo(`/api/auth/signup`, { external: true });
+}
+
+function navigateToSignOut() {
+    navigateTo(`/api/auth/logout`, { external: true });
 }
 </script>

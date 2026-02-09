@@ -5,9 +5,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     apiSecret: process.env.PRIVATE_API_KEY,
     oidc: {
-      issuer: process.env.OIDC_AUTH_SERVER_ISSUER_URL || "http://localhost:8080/.well-known/openid-configuration",
-      clientId: process.env.OIDC_AUTH_SERVER_CLIENT_ID || "mvc",
-      clientSecret: process.env.OIDC_AUTH_SERVER_CLIENT_SECRET || undefined
+      issuer: process.env.OIDC_AUTH_SERVER_ISSUER_URL,
+      clientId: process.env.OIDC_AUTH_SERVER_CLIENT_ID,
+      clientSecret: process.env.OIDC_AUTH_SERVER_CLIENT_SECRET
     },
     public: {
       apiBase: process.env.PRIVATE_API_BASE_URL

@@ -5,7 +5,7 @@ export async function api<T>(
     const config = useRuntimeConfig()
 
     try {
-        return await $fetch<T>('api' + url, {
+        return await $fetch<T>(url, {
             baseURL: config.public.apiBase,
             ...options,
         })

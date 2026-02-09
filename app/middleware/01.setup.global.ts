@@ -8,7 +8,12 @@ export default defineNuxtRouteMiddleware(async (to, from)=> {
     const session = useSessionStore();
 
     if (!session.loaded) {
-        await session.checkIfAuthorizedGlobally();
-        session.markFirstLoad();
+        const authorized = await session.checkIfAuthorizedGlobally();
+        if (authorized) {
+            session.markFirstLoad();
+        }
+        else {
+            // navigateTo(`/api/auth/signin`, { external: true });
+        }
     }
 })
