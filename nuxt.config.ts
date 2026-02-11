@@ -1,7 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
 
-console.log(process.env)
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   runtimeConfig: {
