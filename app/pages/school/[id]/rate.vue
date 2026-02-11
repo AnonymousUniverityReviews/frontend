@@ -76,6 +76,9 @@
 
 
 <script setup lang="ts">
+// TODO:
+// 1. Update this page to now properly be protected with auth middleware.
+// 2. Use userData from useOidcAuth() for getting userData.
 import { useSessionStore } from '#imports';
 import { getSchoolById } from '~/services/searchService';
 import { getReviewByAuthorID, submitReview } from '~/services/reviewService';
