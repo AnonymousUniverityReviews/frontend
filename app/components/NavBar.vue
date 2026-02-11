@@ -77,7 +77,7 @@
                     <template #button="{ opened, toggle }">
                         <button 
                             @click="toggle"
-                            class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+                            class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-center font-medium hover:bg-gray-200 dark:hover:bg-gray-800 transition"
                         >
                             Account
                             <Icon 
@@ -93,26 +93,26 @@
                             @close="close" 
                             class="absolute left-0 mt-1 w-full bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg z-50"
                         >
-                            <div v-if="!session.authorized" class="py-1">
+                            <div v-if="!loggedIn" class="py-1">
                                 <div
-                                    @click="navigateToSignIn"
+                                    @click="handleLogIn"
                                     class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
-                                    Sign in
+                                    Log in
                                 </div>
                                 <div
-                                    @click="navigateToSignUp"
+                                    @click="handleRegister"
                                     class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
-                                    Sign up
+                                    Register
                                 </div>
                             </div>
                             <div v-else class="py-1">
                                 <div
-                                    @click="navigateToSignOut"
+                                    @click="handleLogout"
                                     class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
-                                    Sign out
+                                    Log out
                                 </div>
                             </div>
                         </Menu>
@@ -137,6 +137,8 @@ const language = ref<string>('en')
 const colorMode = useColorMode()
 const isDark = computed(() => colorMode.value === 'dark');
 
+const { loggedIn, user, login, logout } = useOidcAuth();
+
 function toggleTheme() {
   colorMode.preference = isDark.value ? 'light' : 'dark'
 }
@@ -145,15 +147,15 @@ function setLanguage(lang: string) {
     language.value = lang;
 }
 
-function navigateToSignIn() {
-    navigateTo(`/api/auth/signin`, { external: true });
+function handleLogIn() {
+    login();
 }
 
-function navigateToSignUp() {
-    navigateTo(`/api/auth/signup`, { external: true });
+function handleRegister() {
+    login();
 }
 
-function navigateToSignOut() {
-    navigateTo(`/api/auth/logout`, { external: true });
+function handleLogout() {
+    logout();
 }
 </script>
