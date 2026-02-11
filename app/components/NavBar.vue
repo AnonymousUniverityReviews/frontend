@@ -126,9 +126,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useColorMode } from '#imports'
-import { useSessionStore } from '~/stores/session';
-
-const session = useSessionStore();
 
 const languages = ['en', 'ua'];
 
