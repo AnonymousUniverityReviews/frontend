@@ -126,6 +126,9 @@ import NavBar from '~/components/NavBar.vue'
 import { requestService } from '~/services/requestService'
 import { formColors } from "~/constants/colors";
 
+definePageMeta({
+  middleware: 'auth'
+});
 
 const form = reactive({
     universityName: '',

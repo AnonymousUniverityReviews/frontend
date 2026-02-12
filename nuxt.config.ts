@@ -4,19 +4,54 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   runtimeConfig: {
     apiSecret: process.env.PRIVATE_API_KEY,
-    oidc: {
-      issuer: process.env.OIDC_AUTH_SERVER_ISSUER_URL || "http://localhost:8080/.well-known/openid-configuration",
-      clientId: process.env.OIDC_AUTH_SERVER_CLIENT_ID || "mvc",
-      clientSecret: process.env.OIDC_AUTH_SERVER_CLIENT_SECRET || undefined
-    },
     public: {
       apiBase: process.env.PRIVATE_API_BASE_URL
+    }
+  },
+  oidc: {
+    defaultProvider: 'oidc',
+    session: {
+      automaticRefresh: true,
+      expirationCheck: true,
+      maxAge: 60 * 60 * 24,
+    },
+    middleware: {
+      globalMiddlewareEnabled: false,
+      customLoginPage: false,
+    },
+    providers: {
+      oidc: {
+        clientId: process.env.OIDC_AUTH_SERVER_CLIENT_ID,
+        clientSecret: process.env.OIDC_AUTH_SERVER_CLIENT_SECRET,
+
+        // baseUrl: process.env.OIDC_AUTH_SERVER_ISSUER_URL,
+        authorizationUrl: process.env.OIDC_AUTH_SERVER_AUTHORIZATION_URL,
+        tokenUrl: process.env.OIDC_AUTH_SERVER_TOKEN_URL,
+        userinfoUrl: process.env.OIDC_AUTH_SERVER_USER_INFO_URL,
+        logoutUrl: process.env.OIDC_AUTH_SERVER_LOGOUT_URL,
+
+        responseType: 'code',
+        authenticationScheme: 'header', 
+        scope: ['openid', 'profile', 'offline_access', 'roles'],
+        pkce: true, 
+
+        redirectUri: 'http://localhost:8001/auth/oidc/callback',
+        callbackRedirectUrl: '/',
+        logoutRedirectUrl: '/'
+      }
     }
   },
   pages: true,
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/icon', '@nuxt/test-utils', '@nuxt/image', '@nuxtjs/color-mode', '@pinia/nuxt'],
+  modules: [
+    '@nuxt/icon', 
+    '@nuxt/test-utils', 
+    '@nuxt/image', 
+    '@nuxtjs/color-mode', 
+    '@pinia/nuxt', 
+    'nuxt-oidc-auth'
+  ],
   plugins: [
     
   ],
