@@ -8,7 +8,8 @@ export async function api<T>(
     
     try {
         // Use relative path to call the Nuxt server proxy (which injects the token)
-        return await $fetch<T>(`/api${url}`, {
+        console.log(`[API Proxy] Calling /api/proxy${url} with options:`, options)
+        return await $fetch<T>(`/api/proxy${url}`, {
             ...options,
             // headers will be handled by the server proxy
         })

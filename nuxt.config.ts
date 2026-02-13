@@ -38,6 +38,7 @@ export default defineNuxtConfig({
         skipAccessTokenParsing: true,
         validateAccessToken: false,
         validateIdToken: false,
+        exposeAccessToken: true,
 
         redirectUri: 'http://localhost:8001/auth/oidc/callback',
         callbackRedirectUrl: '/',
@@ -60,6 +61,15 @@ export default defineNuxtConfig({
     
   ],
   css: ['~/assets/css/main.css'],
+    nitro: {
+    preset: 'node-server',
+    storage: { // Use local file system storage for dev quick setup
+      oidc: {
+        driver: 'fs',
+        base: 'oidcstorage',
+      },
+    },
+  },
   vite: {
     plugins: [
       tailwindcss(),

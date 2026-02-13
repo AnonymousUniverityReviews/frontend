@@ -9,6 +9,8 @@ export interface UserPreview {
 export interface PaginatedListOfUserPreview {
   items: UserPreview[]
   pageIndex: number
+  pageSize: number
+  totalCount: number
   totalPages: number
   hasPreviousPage: boolean
   hasNextPage: boolean
@@ -54,6 +56,21 @@ export async function getUsers(params: UserQueryParams) {
     method: 'GET',
     query
   })
+}
+
+// SSR-friendly composable
+export function useUsers(queryParams: Ref<UserQueryParams> | UserQueryParams, options: any = {}) {
+    const params = computed(() => {
+        const p = unref(queryParams)
+        return Object.fromEntries(
+            Object.entries(p).filter(([_, v]) => v != null && v !== '')
+        )
+    })
+
+    return useBackendFetch<PaginatedListOfUserPreview>('/api/proxy/users', {
+        query: params,
+        ...options
+    })
 }
 
 export async function getUserById(userId: string) {

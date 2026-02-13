@@ -41,18 +41,14 @@
 
 <script setup lang="ts">
 
-defineProps({
-  modelValue: {
-    type: Boolean,
-    required: true
-  },
-  title: {
-    type: String,
-    default: ''
-  }
-})
+const props = defineProps<{
+  modelValue: boolean
+  title?: string
+}>()
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits<{ 
+  (e: 'update:modelValue', value: boolean): void
+}>()
 
 function close() {
   emit('update:modelValue', false)
