@@ -1,18 +1,14 @@
 <template>
-  <BaseModal v-if="localUser" @close="$emit('close')">
-    <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full">
-      <div class="flex justify-between items-start mb-6">
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Manage User</h2>
-        <button @click="$emit('close')" class="text-gray-400 hover:text-gray-500">
-          <Icon name="mdi:close" class="w-6 h-6" />
-        </button>
-      </div>
+  <BaseModal 
+    :model-value="true" 
+    @update:model-value="$emit('close')" 
+    title="Manage User"
+  >
+    <div v-if="loading" class="flex justify-center py-8">
+      <Icon name="eos-icons:loading" class="w-8 h-8 text-blue-600 animate-spin" />
+    </div>
 
-      <div v-if="loading" class="flex justify-center py-8">
-        <Icon name="eos-icons:loading" class="w-8 h-8 text-blue-600 animate-spin" />
-      </div>
-
-      <div v-else class="space-y-6">
+    <div v-else-if="localUser" class="space-y-6">
         <!-- Main Info -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -121,6 +117,8 @@
           </button>
         </div>
       </div>
+    <div v-else class="text-center py-8 text-red-500">
+        Failed to load user data.
     </div>
   </BaseModal>
 </template>

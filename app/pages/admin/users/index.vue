@@ -72,11 +72,7 @@
         <!-- Results Summary & Pagination Helper -->
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900/50">
             <span class="text-sm text-gray-700 dark:text-gray-300">
-                Showing <span class="font-medium">{{ users.length }}</span> results
-                <!-- Note: The API response structure in Swagger doesn't seem to give total count cleanly in the preview list directly or needs mapping, 
-                     assuming mapped from 'totalPages' * 'pageSize' roughly or just showing current page count if API doesn't return total Items count explicitly in the wrapper.
-                     Actually PaginatedListOfUserPreview has totalPages. 
-                -->
+                Showing <span class="font-medium">{{ (pageIndex * pageSize) + 1 }}</span> to <span class="font-medium">{{ Math.min((pageIndex + 1) * pageSize, totalCount) }}</span> of <span class="font-medium">{{ totalCount }}</span> results
             </span>
             <div class="flex items-center space-x-2">
                  <label class="text-sm text-gray-600 dark:text-gray-400">Page Size:</label>
@@ -178,22 +174,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue'
-import { getUsers, type UserPreview } from '~/services/userService'
+import { ref, onMounted, reactive, computed, watch } from 'vue'
+import { type UserPreview, type PaginatedListOfUserPreview, useUsers } from '~/services/userService'
 
 definePageMeta({
   layout: 'admin',
   middleware: ['admin'] // Ensure auth and role check
 })
 
-const users = ref<UserPreview[]>([])
-const loading = ref(false)
+// Pagination & Filters
 const pageIndex = ref(0)
 const pageSize = ref(10)
-const totalPages = ref(0)
-const hasPreviousPage = ref(false)
-const hasNextPage = ref(false)
-
 const filters = reactive({
     QueryString: '',
     UserId: '',
@@ -208,6 +199,71 @@ const filterValue = ref('')
 const showModal = ref(false)
 const selectedUserId = ref<string | null>(null)
 
+// --- Data Fetching with SSR Support ---
+
+// Construct query params dynamically
+const queryParams = computed(() => {
+    const params: any = {
+        PageNumber: pageIndex.value + 1,
+        PageSize: pageSize.value,
+        ...filters
+    }
+    return params
+})
+
+// Use the new composable from userService
+const { data: response, pending: loading, refresh, error } = await useUsers(queryParams, {
+    watch: false // Disable auto-refetch to keep "Execute" button behavior
+})
+
+// Debug: Log the raw response if needed
+// watchEffect(() => {
+//    if (response.value) {
+//        console.log('[Admin Users] Raw Response:', response.value)
+//    }
+// })
+
+
+// Handle both PascalCase (C# Default) and camelCase (JS Standard)
+// Also handle if the API returns a raw array (no pagination wrapper)
+const users = computed(() => {
+    const raw = response.value
+    if (!raw) return []
+    if (Array.isArray(raw)) return raw
+    return raw.items || []
+})
+
+const totalPages = computed(() => {
+    const raw = response.value
+    if (!raw) return 0
+    if (Array.isArray(raw)) return 1 // Assume single page if raw array
+    return raw.totalPages || 0
+})
+
+const hasPreviousPage = computed(() => {
+    const raw = response.value
+    if (!raw) return false
+    if (Array.isArray(raw)) return false
+    return raw.hasPreviousPage
+})
+
+const hasNextPage = computed(() => {
+    const raw = response.value
+    if (!raw) return false
+    if (Array.isArray(raw)) return false
+    return raw.hasNextPage
+})
+
+const totalCount = computed(() => {
+     const raw = response.value
+    if (!raw) return 0
+    if (Array.isArray(raw)) return raw.length
+    return raw.totalCount || 0
+})
+
+
+// --- Actions ---
+
 function resetFilters() {
     filters.QueryString = ''
     filters.UserId = ''
@@ -217,11 +273,11 @@ function resetFilters() {
     selectedFilterType.value = ''
     filterValue.value = ''
     pageIndex.value = 0
-    loadUsers()
+    refresh()
 }
 
 function applyFilters() {
-    // Reset specific fields first
+    // Reset specific fields first (logic from original)
     filters.UserId = ''
     filters.UniversityName = ''
     filters.Email = ''
@@ -233,35 +289,17 @@ function applyFilters() {
     }
     
     pageIndex.value = 0 // Reset to first page
-    loadUsers()
+    refresh()
 }
 
 function changePage(newIndex: number) {
     pageIndex.value = newIndex
-    loadUsers()
+    // We need to wait for the pageIndex update to propagate to computed queryParams
+    setTimeout(() => refresh(), 0) // Small tick to ensure computed update
 }
 
-async function loadUsers() {
-    loading.value = true
-    try {
-        const response = await getUsers({
-            ...filters,
-            PageNumber: pageIndex.value + 1, // API likely 1-indexed? Service interface says PageNumber, swagger says int32. Assuming 1-based usually.
-            PageSize: pageSize.value
-        })
-        
-        users.value = response.items || []
-        // Adjust for index/api differences if needed. Assuming response matches interface directly.
-        pageIndex.value = response.pageIndex - 1 // If API returns 1-based index
-        totalPages.value = response.totalPages
-        hasPreviousPage.value = response.hasPreviousPage
-        hasNextPage.value = response.hasNextPage
-
-    } catch (e) {
-        console.error("Failed to load users", e)
-    } finally {
-        loading.value = false
-    }
+function loadUsers() {
+    refresh() // Alias for compatibility with template if needed, or simply replace usage
 }
 
 function openModal(userId: string) {
@@ -269,7 +307,8 @@ function openModal(userId: string) {
     showModal.value = true
 }
 
+// onMounted is no longer needed for initial fetch (useBackendFetch handles it)
 onMounted(() => {
-    loadUsers()
+    console.log('[Admin Users] Mounted')
 })
 </script>
