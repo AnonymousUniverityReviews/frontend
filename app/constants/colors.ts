@@ -1,12 +1,17 @@
-export const emptyRatingColor = "bg-gray-300 dark:bg-gray-700";
+export const emptyRatingColor = "bg-gray-300";
 
 export const hoverRatingColors = {
-    '5': [
-        "bg-red-300 dark:bg-red-400",
-        "bg-red-100 dark:bg-red-300",
-        "bg-yellow-100 dark:bg-yellow-100",
-        "bg-green-200 dark:bg-green-300",
-        "bg-green-300 dark:bg-green-400",
+    '10': [
+        "bg-red-700/50",
+        "bg-red-600/50",
+        "bg-orange-500/50",
+        "bg-amber-500/50",
+        "bg-yellow-400/50",
+        "bg-lime-500/50",
+        "bg-lime-600/50",
+        "bg-green-600/50",
+        "bg-cyan-600/50",
+        "bg-sky-600/50"
     ]
 };
 
@@ -36,10 +41,10 @@ export const ratingColorClasses = {
         "bg-amber-500",
         "bg-yellow-400",
         "bg-lime-500",
-        "bg-green-500",
-        "bg-emerald-600",
-        "bg-teal-500",
-        "bg-cyan-500"
+        "bg-lime-600",
+        "bg-green-600",
+        "bg-cyan-600",
+        "bg-sky-600"
     ]
 }
 
