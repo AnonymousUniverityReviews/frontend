@@ -57,6 +57,7 @@ export interface ReviewMessage {
     authorId: number
     review: string
     ratings: {
+        overallRating: number;
         social: number,
         opportunities: number,
         clubs: number,
@@ -81,6 +82,7 @@ export interface Review {
     createdAt: number
     overallRating: number
     ratings: {
+        overallRating: number,
         social: number,
         opportunities: number,
         clubs: number,

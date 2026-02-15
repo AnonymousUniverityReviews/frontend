@@ -82,16 +82,13 @@
                     <!-- Ratings -->
                     <div
                         v-if="selectedCategory === 'university'"
-                        v-for="(value, type, index) in review.ratings"
-                            :key="type"
                         class="flex flex-col w-full my-4 p-6 gap-3"
                     >
                         <p class="text-lg font-semibold text-gray-700">
-                            {{ capitalize(type) }}
+                            <!-- {{ capitalize(type) }} -->
+                            Загальна оцінка
                         </p>
-                        <RatingInput v-model="ratingValues[index]" />
-                        <!-- <RatingInput v-model="overallRating" /> -->
-
+                        <RatingInput v-model="ratingValues[0]" />
                     </div>
                 </div>
 
@@ -122,7 +119,7 @@
                             px-12 py-2 rounded-2xl text-base font-medium text-gray-50 bg-blue-600! 
                              hover:not-disabled:bg-blue-700! 
                             disabled:opacity-50 transition shadow-lg shadow-blue-500/30"
-                        :disabled="ratingValues.some(val => val === 0) || review.review.length === 0"
+                        :disabled="ratingValues[0] === 0 || review.review.length === 0"
                         @click="submitReviewMessage"
                     >
                         Надіслати
@@ -200,23 +197,12 @@ const review = ref<ReviewMessage>(fetchedReview!);
 
 const ratingValues = ref<number[]>(Object.values(review.value.ratings));
 
-// Initialize with any rating value if it exists, or 0
-// const overallRating = ref(Object.values(review.value.ratings)[0] || 0);
-
 async function submitReviewMessage() {
-    const ratingKeys = Object.keys(review.value.ratings) as (keyof typeof review.value.ratings)[];
 
-    ratingKeys.forEach((key, index) => {
-        // @ts-ignore
-        review.value.ratings[key] = ratingValues.value[index];
-        console.log(`Set ${key} to ${ratingValues.value[index]}`);
-    });
+
+
+    review.value.ratings.overallRating = ratingValues.value[0] ?? 0;
     console.log("Final review object to submit:", review.value);
-    
-    // Apply the single overall rating to all categories
-    // ratingKeys.forEach((key) => {
-    //     review.value.ratings[key] = overallRating.value;
-    // });
 
     await submitReview(review.value);
     showSuccessModal.value = true;
