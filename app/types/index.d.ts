@@ -10,6 +10,8 @@ export interface School {
     id: number
     name: string
     address: string,
+    website: string,
+    rank: number,
     overallRating: number | undefined,
     ratings: {
         social: number,
