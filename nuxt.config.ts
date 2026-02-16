@@ -27,13 +27,18 @@ export default defineNuxtConfig({
         // baseUrl: process.env.OIDC_AUTH_SERVER_ISSUER_URL,
         authorizationUrl: process.env.OIDC_AUTH_SERVER_AUTHORIZATION_URL,
         tokenUrl: process.env.OIDC_AUTH_SERVER_TOKEN_URL,
-        userinfoUrl: process.env.OIDC_AUTH_SERVER_USER_INFO_URL,
+        userInfoUrl: process.env.OIDC_AUTH_SERVER_USER_INFO_URL,
         logoutUrl: process.env.OIDC_AUTH_SERVER_LOGOUT_URL,
 
         responseType: 'code',
-        authenticationScheme: 'header', 
+        authenticationScheme: 'body', 
         scope: ['openid', 'profile', 'offline_access', 'roles'],
         pkce: true, 
+        tokenRequestType: 'form-urlencoded',
+        skipAccessTokenParsing: true,
+        validateAccessToken: false,
+        validateIdToken: false,
+        exposeAccessToken: true,
 
         redirectUri: 'http://localhost:8001/auth/oidc/callback',
         callbackRedirectUrl: '/',
@@ -56,6 +61,15 @@ export default defineNuxtConfig({
     
   ],
   css: ['~/assets/css/main.css'],
+    nitro: {
+    preset: 'node-server',
+    storage: { // Use local file system storage for dev quick setup
+      oidc: {
+        driver: 'fs',
+        base: 'oidcstorage',
+      },
+    },
+  },
   vite: {
     plugins: [
       tailwindcss(),

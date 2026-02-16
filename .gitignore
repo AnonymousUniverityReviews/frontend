@@ -25,3 +25,6 @@ server/api/*.ts
 .env
 .env.*
 !.env.example
+
+/oidcstorage
+/.oidc-storage
