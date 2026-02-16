@@ -25,7 +25,3 @@ jobs:
     needs: build-test
     if: github.event_name == 'push'
     uses: ./.github/workflows/push-docker-images.yml
-    with:
-      AWS_REGION: "eu-central-1"
-      AWS_ACCOUNT_ID: "585517712585"
-      CONTAINER_NAME: "frontend"
