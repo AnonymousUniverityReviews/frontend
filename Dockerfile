@@ -1,24 +1,22 @@
-FROM node:22-alpine AS builder
-
+FROM node:22-alpine AS build
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
-RUN npm install
+RUN npm i
 
-COPY . .
+COPY . ./
 
 RUN npm run build
 
 FROM node:22-alpine
-
 WORKDIR /app
 
-COPY --from=builder /app/.output ./.output
-COPY package*.json ./
+COPY --from=build /app/.output/ ./
 
-RUN npm install --only=production
+ENV PORT=80
+ENV HOST=0.0.0.0
 
 EXPOSE 80
 
-CMD ["node", ".output/server/index.mjs"]
+CMD ["node", "/app/server/index.mjs"]
