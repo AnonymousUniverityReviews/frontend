@@ -1,14 +1,41 @@
 <template>
     <nav
-      class="w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 sticky top-0 z-50"
+      class="w-full border-b border-gray-200 bg-white text-gray-900 sticky top-0 z-50 shadow-md shadow-blue-200/30"
       aria-label="Main navigation"
     >
         <div class="flex flex-row max-w-6xl mx-auto px-4 py-3 justify-between items-center">
             <!-- Left: Catalog link -->
             <div class="flex items-center gap-6">
-                <NuxtLink to="/catalog" class="text-lg font-semibold hover:text-blue-600 transition">
-                    Catalog
+                <NuxtLink to="/" class="text-2xl font-semibold hover:text-blue-600 transition">
+                    Studentus
                 </NuxtLink>
+
+                <!-- Request Button -->
+                <button
+                    id="main"
+                    @click="$router.push('/')"
+                    class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
+                >
+                    Головна
+                </button>
+
+                <!-- Request Button -->
+                <button
+                    id="add-uni"
+                    @click="$router.push('/uni-request')"
+                    class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
+                >
+                    Додати університет
+                </button>
+
+                <!-- UniRate Button -->
+                <button
+                    id="overall-rate"
+                    @click="$router.push('school/${id}/overall_rate')"
+                    class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
+                >
+                    Залишити відгук
+                </button>
             </div>
 
             <!-- Right: Controls -->
@@ -20,7 +47,7 @@
                     <template #button="{ opened, toggle }">
                         <button 
                             @click="toggle"
-                            class="inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-2 py-1 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-800 focus:outline-none focus:ring focus:ring-blue-500"
+                            class="inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border border-gray-300 bg-transparent px-2 py-1 text-sm font-medium hover:bg-gray-200 focus:outline-none focus:ring focus:ring-blue-500"
                         >
                             {{ language.toUpperCase() }}
                             <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="-mr-1 size-5 text-gray-400">
@@ -33,11 +60,11 @@
                     <template #menu="{ close }">
                         <Menu 
                             @close="close" 
-                            class="absolute left-0 mt-1 w-full bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg z-50"
+                            class="absolute left-0 mt-1 w-full bg-white border rounded-lg shadow-lg z-50"
                         >
                             <div class="py-1">
                                 <p
-                                    class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
+                                    class="block w-full py-1 text-center text-sm text-gray-700 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                     v-for="lang in languages" 
                                     :key="lang" 
                                     @click="setLanguage(lang), close()"
@@ -50,7 +77,7 @@
                 </Dropdown>
 
                 <!-- Theme Switcher -->
-                <button
+                <!-- <button
                     type="button"
                     @click="toggleTheme"
                     class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition"
@@ -59,25 +86,9 @@
                 >
                     <span v-if="isDark">🌙</span>
                     <span v-else>☀️</span>
-                </button>
+                </button> -->
 
-                <!-- Request Button -->
-                <button
-                    id="add-uni"
-                    @click="$router.push('/uni-request')"
-                    class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-800 transition"
-                >
-                    Add University
-                </button>
 
-                <!-- UniRate Button -->
-                <button
-                    id="overall-rate"
-                    @click="$router.push('school/${id}/overall_rate')"
-                    class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-800 transition"
-                >
-                    Залишити відгук
-                </button>
 
                 <!-- Account Menu -->
                 <label class="sr-only" for="account">Account</label>
@@ -86,7 +97,7 @@
                     <template #button="{ opened, toggle }">
                         <button 
                             @click="toggle"
-                            class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-center font-medium hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+                            class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-center font-medium hover:bg-gray-200 transition"
                         >
                             Account
                             <Icon 
@@ -100,18 +111,18 @@
                     <template #menu="{ close }">
                         <Menu 
                             @close="close" 
-                            class="absolute left-0 mt-1 w-full bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg z-50"
+                            class="absolute left-0 mt-1 w-full bg-white border rounded-lg shadow-lg z-50"
                         >
                             <div v-if="!loggedIn" class="py-1">
                                 <div
                                     @click="handleLogIn"
-                                    class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
+                                    class="block w-full py-1 text-center text-sm text-gray-700 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
                                     Log in
                                 </div>
                                 <div
                                     @click="handleRegister"
-                                    class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
+                                    class="block w-full py-1 text-center text-sm text-gray-700 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
                                     Register
                                 </div>
@@ -119,7 +130,7 @@
                             <div v-else class="py-1">
                                 <div
                                     @click="handleLogout"
-                                    class="block w-full py-1 text-center text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
+                                    class="block w-full py-1 text-center text-sm text-gray-700 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
                                     Log out
                                 </div>
