@@ -145,17 +145,12 @@ async function loadMoreReviews() {
     
     loading.value = true;
     try {
-        // Simulate network delay for demo
         await new Promise(r => setTimeout(r, 800));
         
         const reviewsResult = await getReviews("school", id, cursor.value);
         
-        // Append new reviews
         reviews.value.push(...reviewsResult.result);
         
-        // Update cursor (mock logic needs to handle this, for now we just keep adding same mocks or stop)
-         // In real app, backend returns next cursor or -1. 
-         // For this mock, let's just stop after a few loads to simulate end.
          if (reviews.value.length > 20) {
              cursor.value = -1;
          } else {
@@ -188,4 +183,8 @@ function getRatingColorClass(rating: number): string {
     if (rating >= 3) return 'border-orange-500 text-orange-500';
     return 'border-red-500 text-red-500';
 }
+
+useHead({
+    title: school.value.name
+})
 </script>
