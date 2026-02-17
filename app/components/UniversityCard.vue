@@ -3,12 +3,11 @@
     <div class="flex flex-row items-center gap-6">
       <!-- Logo Placeholder -->
       <div class="w-24 h-24 rounded-2xl bg-white border border-gray-100 p-2 flex items-center justify-center overflow-hidden shrink-0">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Knu_logo.svg/1200px-Knu_logo.svg.png" v-if="school.id === 1" alt="University Logo" class="object-contain w-full h-full" />
-          <Icon name="emojione:school" class="w-16 h-16" v-else />
+          <img src=""  alt="University Logo" class="object-contain w-full h-full" />
       </div>
       
       <div class="flex flex-col gap-1">
-          <span class="text-blue-500 text-xs font-bold uppercase tracking-wider">ТОП {{ rank }}/200</span>
+          <span class="text-blue-500 text-xs text-left font-bold uppercase tracking-wider">ТОП {{ rank }}/200</span>
           <h1 class="text-xl font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors">
               {{ school.name }}
           </h1>
