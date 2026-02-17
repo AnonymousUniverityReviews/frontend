@@ -2,10 +2,17 @@
     <NuxtLink :to="'/reviews/' + review.id" class="block w-full group">
         <div class="flex flex-row items-center justify-between p-6 bg-gray-50 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
             
-            <div class="flex flex-col gap-3 flex-1 pr-6">
-                <p class="text-gray-800 text-base font-medium leading-relaxed line-clamp-3">
-                    {{ review.review }}
-                </p>
+            <div class="flex flex-col gap-3 flex-1 mr-6 overflow-hidden">
+                <div class="relative h-[4.8em] overflow-hidden flex flex-col">
+                    <p class="text-gray-800 text-sm">
+                        Anonym #{{ review.authorId }}
+                    </p>    
+                    <p class="text-gray-800 text-base font-medium leading-relaxed my-auto">
+                        {{ review.review }}
+                    </p>
+                    
+                    <div class="absolute right-0 bottom-0 h-[2em] w-40 bg-gradient-to-l from-gray-50 to-transparent"></div>
+                </div>
                 
                 <NuxtTime
                     :datetime="new Date(review.createdAt)"
