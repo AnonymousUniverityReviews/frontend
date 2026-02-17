@@ -117,12 +117,29 @@
       </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="py-8 text-center text-xs text-gray-500 dark:text-gray-400">
-      <p>
-        © {{ new Date().getFullYear() }} Studentus. All rights reserved.
-      </p>
-    </footer>
+    <!-- Footer -->
+        <footer class="mt-auto py-8 border-t border-gray-200 bg-gray-50">
+             <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center gap-2">
+                        <div class="h-14 w-14 rounded-2xl bg-white border border-gray-200 grid place-items-center">
+                            <span class="bg-gradient-to-br from-blue-600 to-indigo-500 bg-clip-text text-transparent text-3xl font-black select-none">S</span>
+                        </div>
+                        <span class="font-bold text-xl">Studentus</span>
+                    </div>
+                    <p class="text-xs text-gray-500 max-w-xs">
+                        Studentus – єдиний в Україні сайт, який зібрав усі відгуки, важливі для студентів
+                    </p>
+                    <p class = "text-xs text-gray-500 max-w-xs">
+                        © {{ new Date().getFullYear() }} Studentus. All rights reserved.
+                    </p>
+                </div>
+                 <div class="text-sm text-gray-500 text-right">
+                    <p class="font-semibold mb-1">Якщо у вас виникли будь-які запитання, напишіть нам:</p>
+                    <a href="mailto:contact@studentus.com" class="font-medium hover:underline">contact@studentus.com</a>
+                </div>
+             </div>
+        </footer>
   </div>
 </template>
 
