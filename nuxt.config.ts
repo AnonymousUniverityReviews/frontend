@@ -31,16 +31,16 @@ export default defineNuxtConfig({
         logoutUrl: process.env.OIDC_AUTH_SERVER_LOGOUT_URL,
 
         responseType: 'code',
-        authenticationScheme: 'body', 
+        authenticationScheme: 'body',
         scope: ['openid', 'profile', 'offline_access', 'roles'],
-        pkce: true, 
+        pkce: true,
         tokenRequestType: 'form-urlencoded',
         skipAccessTokenParsing: true,
         validateAccessToken: false,
         validateIdToken: false,
         exposeAccessToken: true,
 
-        redirectUri: 'http://localhost:8001/auth/oidc/callback',
+        redirectUri: process.env.OIDC_REDIRECT_URI,
         callbackRedirectUrl: '/',
         logoutRedirectUrl: '/'
       }
@@ -50,18 +50,18 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: [
-    '@nuxt/icon', 
-    '@nuxt/test-utils', 
-    '@nuxt/image', 
-    '@nuxtjs/color-mode', 
-    '@pinia/nuxt', 
+    '@nuxt/icon',
+    '@nuxt/test-utils',
+    '@nuxt/image',
+    '@nuxtjs/color-mode',
+    '@pinia/nuxt',
     'nuxt-oidc-auth'
   ],
   plugins: [
-    
+
   ],
   css: ['~/assets/css/main.css'],
-    nitro: {
+  nitro: {
     preset: 'node-server',
     storage: { // Use local file system storage for dev quick setup
       oidc: {
