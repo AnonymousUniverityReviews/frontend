@@ -73,11 +73,22 @@
             </template>
         </div>
 
-        <div ref="loadTrigger" class="mt-8 flex justify-center py-4">
-             <div v-if="loading" class="h-10 w-10 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
-             <span v-else-if="!hasMore && schools.length > 0" class="text-gray-400 text-sm">
-                Більше університетів немає
-             </span>
+        <div class="mt-8 flex flex-col items-center gap-4">
+             <button 
+                v-if="hasMore && !loading && !isInfiniteScrollActive"
+                @click="enableInfiniteScroll"
+                class="flex items-center gap-2 px-6 py-2.5  text-gray-700 hover:text-gray-800 rounded-full font-medium transition-all"
+             >
+                <span>Дивитись далі</span>
+                <Icon name="ph:caret-down-bold" class="w-4 h-4" />
+             </button>
+
+             <div ref="loadTrigger" class="flex justify-center py-4 w-full h-10">
+                 <div v-if="loading" class="h-10 w-10 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+                 <span v-else-if="!hasMore && schools.length > 0" class="text-gray-400 text-sm">
+                    Більше університетів немає
+                 </span>
+             </div>
         </div>
      </div>
     </main>
@@ -101,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useHead, useRouter } from '#imports'
 import { getSchools } from '~/services/searchService'
 import type { School } from '~/types'
@@ -118,6 +129,31 @@ const hasMore = ref(true);
 const loading = ref(false);
 const totalSchools = ref(0);
 const loadTrigger = ref<HTMLElement | null>(null); // Sentinel for infinite scroll
+const isInfiniteScrollActive = ref(false);
+let observer: IntersectionObserver | null = null;
+
+function enableInfiniteScroll() {
+    isInfiniteScrollActive.value = true;
+    loadSchools();
+}
+
+onMounted(() => {
+    observer = new IntersectionObserver((entries) => {
+        if (!loading.value && hasMore.value && isInfiniteScrollActive.value) {
+            loadSchools();
+        }
+    }, {
+        rootMargin: '200px'
+    });
+
+    if (loadTrigger.value) {
+        observer.observe(loadTrigger.value);
+    }
+});
+
+onUnmounted(() => {
+    if (observer) observer.disconnect();
+});
 
 const placeholder = computed(() => 'Знайти універ')
 const demoPills = ['КНУ Шевченка', 'КПІ', 'ЛНУ Франка', 'Сумський державний університет']
@@ -159,6 +195,7 @@ async function loadSchools(reset: boolean = false) {
 }
 
 watch(searchText, () => {
+    isInfiniteScrollActive.value = false;
     loadSchools(true);
 });
 
