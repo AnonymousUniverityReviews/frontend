@@ -14,7 +14,7 @@
           Studentus
         </h1>
         <p class="mt-2 text-gray-600 max-w-md mx-auto">
-          Find & review professors and schools
+          Знайти & залишии відгук про університет
         </p>
       </div>
 
@@ -93,7 +93,7 @@
           </template>
         </SearchBar>
         
-        <div class="mt-2 text-sm">
+        <!-- <div class="mt-2 text-sm">
           <a
             href="#"
             @click.prevent="toggleSearchType"
@@ -101,7 +101,7 @@
           >
             {{ searchType === 'professor' ? 'Switch to school search' : 'Switch to professor search' }}
           </a>
-        </div>
+        </div> -->
 
         <!-- Helper pills (optional aesthetic) -->
         <div class="mt-4 flex flex-wrap justify-center gap-2">
@@ -109,7 +109,7 @@
             v-for="pill in demoPills"
             :key="pill"
             @click="searchText = pill"
-            class="px-3 py-1 rounded-full border border-gray-300 text-xs hover:bg-gray-100 transition"
+            class="px-3 py-1 rounded-full text-xs border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-400/30 shadow-sm shadow-blue-200/30 transition"
           >
             {{ pill }}
           </button>
@@ -154,10 +154,10 @@ const searchType = ref<'professor' | 'school'>('professor')
 const searchText = ref<string>("");
 
 const placeholder = computed(() =>
-  searchType.value === 'professor' ? 'Search for a professor...' : 'Search for a school...'
+  searchType.value === 'professor' ? 'Search for a professor...' : 'Знайти універ'
 )
 
-const demoPills = ['Taras Shevchenko University', 'Computer Science', 'Ivan Petrenko', 'Kyiv']
+const demoPills = ['КНУ Шевченка', 'КПІ', 'ЛНУ Франка', 'Сумський державний університет']
 
 function toggleSearchType() {
   searchType.value = searchType.value === 'professor' ? 'school' : 'professor'
