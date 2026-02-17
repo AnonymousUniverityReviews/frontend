@@ -3,7 +3,32 @@ import tailwindcss from "@tailwindcss/vite";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   runtimeConfig: {
-    apiSecret: process.env.PRIVATE_API_KEY,
+    oidc: {
+      providers: {
+        oidc: {
+          clientId: '',
+          clientSecret: '',
+          authorizationUrl: '',
+          tokenUrl: '',
+          userInfoUrl: '',
+          logoutUrl: '',
+          redirectUri: '',
+
+          responseType: 'code',
+          authenticationScheme: 'body',
+          scope: ['openid', 'profile', 'offline_access', 'roles'],
+          pkce: true,
+          tokenRequestType: 'form-urlencoded',
+          skipAccessTokenParsing: true,
+          validateAccessToken: false,
+          validateIdToken: false,
+          exposeAccessToken: true,
+
+          callbackRedirectUrl: '/',
+          logoutRedirectUrl: '/'
+        }
+      }
+    },
     public: {
       apiBase: process.env.PRIVATE_API_BASE_URL
     }
@@ -21,28 +46,6 @@ export default defineNuxtConfig({
     },
     providers: {
       oidc: {
-        clientId: process.env.OIDC_AUTH_SERVER_CLIENT_ID,
-        clientSecret: process.env.OIDC_AUTH_SERVER_CLIENT_SECRET,
-
-        // baseUrl: process.env.OIDC_AUTH_SERVER_ISSUER_URL,
-        authorizationUrl: process.env.OIDC_AUTH_SERVER_AUTHORIZATION_URL,
-        tokenUrl: process.env.OIDC_AUTH_SERVER_TOKEN_URL,
-        userInfoUrl: process.env.OIDC_AUTH_SERVER_USER_INFO_URL,
-        logoutUrl: process.env.OIDC_AUTH_SERVER_LOGOUT_URL,
-
-        responseType: 'code',
-        authenticationScheme: 'body',
-        scope: ['openid', 'profile', 'offline_access', 'roles'],
-        pkce: true,
-        tokenRequestType: 'form-urlencoded',
-        skipAccessTokenParsing: true,
-        validateAccessToken: false,
-        validateIdToken: false,
-        exposeAccessToken: true,
-
-        redirectUri: process.env.OIDC_REDIRECT_URI,
-        callbackRedirectUrl: '/',
-        logoutRedirectUrl: '/'
       }
     }
   },
