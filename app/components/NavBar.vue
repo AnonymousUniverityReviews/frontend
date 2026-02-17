@@ -6,15 +6,20 @@
         <div class="flex flex-row max-w-6xl mx-auto px-4 py-3 justify-between items-center">
             <!-- Left: Catalog link -->
             <div class="flex items-center gap-6">
-                <NuxtLink to="/" class="text-2xl font-semibold hover:text-blue-600 transition">
-                    Studentus
-                </NuxtLink>
+                <div class="flex items-center gap-2">
+                    <div class="h-full w-10 rounded-xl bg-white border border-gray-200 grid place-items-center">
+                        <span class="p-1 bg-gradient-to-br from-blue-600 to-indigo-500 bg-clip-text text-transparent text-2xl font-black select-none">S</span>
+                    </div>
+                    <NuxtLink to="/" class="text-2xl items-center font-semibold hover:text-blue-600 transition">
+                        Studentus
+                    </NuxtLink>
+                </div>
 
                 <!-- Request Button -->
                 <button
                     id="main"
                     @click="$router.push('/')"
-                    class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
+                    class="gap-1 mt-1 inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
                 >
                     Головна
                 </button>
@@ -23,7 +28,7 @@
                 <button
                     id="add-uni"
                     @click="$router.push('/uni-request')"
-                    class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
+                    class="inline-flex items-center gap-1 mt-1 gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
                 >
                     Додати університет
                 </button>
@@ -31,15 +36,15 @@
                 <!-- UniRate Button -->
                 <button
                     id="overall-rate"
-                    @click="$router.push('school/${id}/overall_rate')"
-                    class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
-                >
-                    Залишити відгук
-                </button>
+                    @click="$router.push('school/${{user.id}}/rate')"
+                        class="inline-flex items-center gap-1 mt-1 gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
+                    >
+                        Залишити відгук
+                    </button>
             </div>
 
             <!-- Right: Controls -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center mt-1.5 gap-3">
                 <!-- Language Switcher -->
                 <label class="sr-only" for="lang">Language</label>
                 <Dropdown id="lang" class="inline-block">
@@ -151,14 +156,14 @@ const languages = ['en', 'ua'];
 
 const language = ref<string>('en')
 
-const colorMode = useColorMode()
-const isDark = computed(() => colorMode.value === 'dark');
+// const colorMode = useColorMode()
+// const isDark = computed(() => colorMode.value === 'dark');
 
 const { loggedIn, user, login, logout } = useOidcAuth();
 
-function toggleTheme() {
-  colorMode.preference = isDark.value ? 'light' : 'dark'
-}
+// function toggleTheme() {
+//   colorMode.preference = isDark.value ? 'light' : 'dark'
+// }
 
 function setLanguage(lang: string) {
     language.value = lang;

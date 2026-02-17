@@ -20,6 +20,7 @@
             class="w-full max-w-xl justify-self-center" 
             v-model="searchText" 
             :debounce-ms="500" 
+            :on-submit="handleSearchSubmit"
             v-on:query-change="handleSearchInput"
         >
           <template #input="{ opened, submitSearch, onFocus }">
@@ -35,7 +36,7 @@
                 class="absolute inset-y-0 right-0 px-4 flex items-center justify-center cursor-pointer"
                 aria-label="Submit search"
               >
-                🔍
+                <Icon name="mdi:magnify" class="w-5 h-5 text-gray-400" />
               </button>
             </div>
           </template>
@@ -163,7 +164,7 @@ onUnmounted(() => {
     if (observer) observer.disconnect();
 });
 
-const placeholder = computed(() => 'Знайти універ')
+const placeholder = computed(() => 'Знайти університет...')
 const demoPills = ['КНУ Шевченка', 'КПІ', 'ЛНУ Франка', 'Сумський державний університет']
 
 async function loadSchools(reset: boolean = false) {
@@ -213,6 +214,10 @@ loadSchools(true);
 // Mock function for search input autocomplete if needed
 async function handleSearchInput(query: string) {
     return [];
+}
+
+const handleSearchSubmit = (query: string) => {
+  loadSchools(true);
 }
 
 useHead({
