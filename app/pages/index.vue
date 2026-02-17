@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+  <div class="min-h-screen flex flex-col bg-white text-gray-900">
     <!-- NAVBAR -->
     <NavBar class="h-16" />
 
@@ -13,7 +13,7 @@
         <h1 class="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight">
           Studentus
         </h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+        <p class="mt-2 text-gray-600 max-w-md mx-auto">
           Find & review professors and schools
         </p>
       </div>
@@ -27,7 +27,7 @@
                 type="text"
                 v-model="searchText"
                 :placeholder="placeholder"
-                class="w-full px-5 py-4 pr-12 rounded-2xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:outline-none text-base shadow-sm"
+                class="w-full px-5 py-4 pr-12 rounded-2xl border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none text-base shadow-sm"
                 @keydown.enter="submitSearch"
                 aria-label="Search"
                 @focus="onFocus"
@@ -97,7 +97,7 @@
           <a
             href="#"
             @click.prevent="toggleSearchType"
-            class="text-blue-600 dark:text-blue-400 hover:underline"
+            class="text-blue-600 hover:underline"
           >
             {{ searchType === 'professor' ? 'Switch to school search' : 'Switch to professor search' }}
           </a>
@@ -109,7 +109,7 @@
             v-for="pill in demoPills"
             :key="pill"
             @click="searchText = pill"
-            class="px-3 py-1 rounded-full border border-gray-300 dark:border-gray-700 text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            class="px-3 py-1 rounded-full border border-gray-300 text-xs hover:bg-gray-100 transition"
           >
             {{ pill }}
           </button>
