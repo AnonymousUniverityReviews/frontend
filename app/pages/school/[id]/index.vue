@@ -7,7 +7,7 @@
             <div class="bg-gray-50 rounded-2xl p-6 shadow-sm flex flex-row items-center justify-between">
                 <div class="flex flex-row items-center gap-6">
                     <!-- Logo Placeholder -->
-                    <div class="w-24 h-24 rounded-full bg-white border border-gray-100 p-2 flex items-center justify-center overflow-hidden shrink-0">
+                    <div class="w-24 h-24 rounded-2xl bg-white border border-gray-100 p-2 flex items-center justify-center overflow-hidden shrink-0">
                         <img src="" alt="University Logo" class="object-contain w-full h-full" />
                     </div>
                     
@@ -44,7 +44,7 @@
                 <!-- Overall Rating Badge -->
                  <CircularRating 
                     :model-value="school.overallRating || 0" 
-                    size="xl" 
+                    size="lg" 
                     :stroke="5"
                  />
             </div>
@@ -131,7 +131,6 @@ function expandReviews() {
     isExpanded.value = true;
 }
 
-// Initial data fetch
 try {
     const schoolData = await getSchoolById(id);
     school.value = schoolData.result as School;
@@ -164,7 +163,6 @@ async function loadMoreReviews() {
     }
 }
 
-// Initial load
 await loadMoreReviews();
 
 // useIntersectionObserver(
@@ -175,14 +173,6 @@ await loadMoreReviews();
 //         }
 //     }
 // );
-
-function getRatingColorClass(rating: number): string {
-    if (rating >= 9) return 'border-green-500 text-green-500';
-    if (rating >= 7) return 'border-lime-500 text-lime-500';
-    if (rating >= 5) return 'border-yellow-500 text-yellow-500';
-    if (rating >= 3) return 'border-orange-500 text-orange-500';
-    return 'border-red-500 text-red-500';
-}
 
 useHead({
     title: school.value.name
