@@ -55,16 +55,86 @@
       </div>
 
      <div class="w-full max-w-6xl mt-16 px-4">
-        <div class="flex justify-between items-center mb-6">
-            <div class="flex items-center gap-2">
-                 <Icon name="ph:sort-ascending" class="w-5 h-5 text-gray-500" />
-                 <span class="text-sm font-medium text-gray-600">За рейтингом</span>
-                 <Icon name="ph:caret-down" class="w-3 h-3 text-gray-400" />
+        <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+             <!-- Sort Dropdown -->
+            <div class="relative">
+                <button 
+                    @click.stop="isSortDropdownOpen = !isSortDropdownOpen"
+                    class="sort-dropdown-trigger flex items-center gap-2 px-4 py-2 bg-white rounded-xl hover:bg-gray-100 transition cursor-pointer"
+                >
+                     <Icon v-if="selectedSort === 'rating'" name="mdi:sort" class="w-5 h-5 text-gray-500" />
+                     <Icon v-else-if="selectedSort === 'reviews'" name="mdi:forum-outline" class="w-5 h-5 text-gray-500" />
+                     <Icon v-else name="mdi:clock-time-two-outline" class="w-5 h-5 text-gray-500" />
+
+                     <span class="text-sm font-medium text-gray-700">
+                        {{ selectedSort === 'rating' ? 'За рейтингом' : selectedSort === 'reviews' ? 'Найбільше відгуків' : 'Спочатку найновіші' }}
+                     </span>
+                     <Icon name="ph:caret-down-bold" class="w-3 h-3 text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': isSortDropdownOpen }" />
+                </button>
+
+                <div v-if="isSortDropdownOpen" class="sort-dropdown-content absolute left-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-xl z-20 overflow-hidden flex flex-col py-1">
+                     <button @click="selectSort('rating')" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-left transition">
+                        <Icon name="mdi:star-outline" class="w-5 h-5 text-yellow-500" />
+                        <span class="text-sm text-gray-700">За рейтингом</span>
+                        <Icon v-if="selectedSort === 'rating'" name="ph:check-bold" class="w-4 h-4 text-blue-600 ml-auto" />
+                     </button>
+                      <button @click="selectSort('reviews')" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-left transition">
+                        <Icon name="mdi:forum-outline" class="w-5 h-5 text-blue-500" />
+                         <span class="text-sm text-gray-700">Найбільше відгуків</span>
+                         <Icon v-if="selectedSort === 'reviews'" name="ph:check-bold" class="w-4 h-4 text-blue-600 ml-auto" />
+                     </button>
+                      <button @click="selectSort('newest')" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-left transition">
+                         <Icon name="mdi:clock-time-two-outline" class="w-5 h-5 text-green-500" />
+                         <span class="text-sm text-gray-700">Спочатку найновіші</span>
+                         <Icon v-if="selectedSort === 'newest'" name="ph:check-bold" class="w-4 h-4 text-blue-600 ml-auto" />
+                     </button>
+                </div>
             </div>
-             <div class="flex items-center gap-2">
-                 <Icon name="ph:sliders-horizontal" class="w-5 h-5 text-gray-500" />
-                 <span class="text-sm font-medium text-gray-600">Фільтрувати</span>
-                 <Icon name="ph:caret-down" class="w-3 h-3 text-gray-400" />
+
+             <!-- Filter Dropdown -->
+             <div class="relative">
+                  <button 
+                    @click.stop="isCityDropdownOpen = !isCityDropdownOpen"
+                     class="city-dropdown-trigger flex items-center gap-2 px-4 py-2 bg-white rounded-xl hover:bg-gray-100 transition cursor-pointer"
+                     :class="{ 'border-blue-500 ring-2 ring-blue-100': selectedCity }"
+                  >
+                     <Icon name="mdi:tune-vertical-variant" class="w-5 h-5 text-gray-500" :class="{ 'text-blue-600': selectedCity }" />
+                     <span class="text-sm font-medium text-gray-700" :class="{ 'text-blue-600': selectedCity }">
+                        {{ selectedCity || 'Фільтрувати' }}
+                     </span>
+                     <Icon v-if="selectedCity" @click.stop.prevent="selectCity('')" name="ph:x-circle-fill" class="w-4 h-4 text-gray-400 hover:text-red-500" />
+                     <Icon v-else name="ph:caret-down-bold" class="w-3 h-3 text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': isCityDropdownOpen }" />
+                </button>
+
+                 <div v-if="isCityDropdownOpen" class="city-dropdown-content absolute right-0 mt-2 w-64 bg-white border border-gray-100 rounded-2xl shadow-xl z-20 overflow-hidden flex flex-col">
+                    <div class="p-3 border-b border-gray-100">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider ml-1">Місто</span>
+                        <div class="mt-2 relative">
+                            <input 
+                                v-model="citySearchText"
+                                type="text" 
+                                placeholder="Введіть місто" 
+                                class="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
+                                autofocus
+                            >
+                            <Icon name="ph:magnifying-glass" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+                        </div>
+                    </div>
+                    <div class="max-h-60 overflow-y-auto py-1 custom-scrollbar">
+                        <button 
+                            v-for="city in filteredCities" 
+                            :key="city"
+                            @click="selectCity(city)"
+                            class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition flex items-center justify-between"
+                        >
+                            {{ city }}
+                             <Icon v-if="selectedCity === city" name="ph:check-bold" class="w-3.5 h-3.5 text-blue-600" />
+                        </button>
+                         <div v-if="filteredCities.length === 0" class="px-4 py-8 text-center text-sm text-gray-400">
+                            Місто не знайдено
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -167,6 +237,53 @@ onUnmounted(() => {
 const placeholder = computed(() => 'Знайти університет...')
 const demoPills = ['Львівська політехніка', 'Київ', 'Національний', 'Сумський державний університет']
 
+// Filtering & Sorting State
+const selectedCity = ref<string>("");
+const selectedSort = ref<"rating" | "reviews" | "newest">("rating");
+const isCityDropdownOpen = ref(false);
+const isSortDropdownOpen = ref(false);
+const citySearchText = ref("");
+
+const cities = [
+    "Київ", "Львів", "Харків", "Одеса", "Дніпро", "Вінниця", "Запоріжжя", "Тернопіль", "Полтава", "Ужгород", "Чернівці", "Суми"
+];
+
+const filteredCities = computed(() => {
+    if (!citySearchText.value) return cities;
+    return cities.filter(c => c.toLowerCase().includes(citySearchText.value.toLowerCase()));
+});
+
+function selectCity(city: string) {
+    selectedCity.value = city;
+    isCityDropdownOpen.value = false;
+    citySearchText.value = "";
+}
+
+function selectSort(sort: "rating" | "reviews" | "newest") {
+    selectedSort.value = sort;
+    isSortDropdownOpen.value = false;
+}
+
+// Close dropdowns when clicking outside
+onMounted(() => {
+    document.addEventListener('click', closeDropdowns);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', closeDropdowns);
+});
+
+function closeDropdowns(e: Event) {
+    const target = e.target as HTMLElement;
+    if (!target.closest('.city-dropdown-trigger') && !target.closest('.city-dropdown-content')) {
+        isCityDropdownOpen.value = false;
+    }
+    if (!target.closest('.sort-dropdown-trigger') && !target.closest('.sort-dropdown-content')) {
+        isSortDropdownOpen.value = false;
+    }
+}
+
+
 async function loadSchools(reset: boolean = false) {
     if (loading.value) return;
     if (!hasMore.value && !reset) return;
@@ -180,7 +297,7 @@ async function loadSchools(reset: boolean = false) {
     }
 
     try {
-        const data = await getSchools(searchText.value, "basic", page.value, pageSize);
+        const data = await getSchools(searchText.value, "basic", page.value, pageSize, selectedCity.value, selectedSort.value);
         
         if (reset) {
             schools.value = data.result;
@@ -203,7 +320,7 @@ async function loadSchools(reset: boolean = false) {
     }
 }
 
-watch(searchText, () => {
+watch([searchText, selectedCity, selectedSort], () => {
     isInfiniteScrollActive.value = false;
     loadSchools(true);
 });
