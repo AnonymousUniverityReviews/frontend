@@ -26,10 +26,13 @@
               </a>
               <p class="text-gray-500 mx-1">|</p>
               <a :href="school.website" target="_blank" @click.stop class="flex items-center gap-1 hover:text-blue-500 transition-colors" v-if="school.website">
-                  <Icon name="mdi:web" class="text-gray-400 mt-0.5" />
+                  <Icon name="mdi:web" class="text-gray-400 mt-1" />
                   <span class="truncate max-w-[200px]">{{ school.website.replace(/^https?:\/\//, '').replace(/\/$/, '') }}</span>
               </a>
           </div>
+          <div class="text-lg font-semibold text-left text-gray-600">
+                {{ school.reviewsAmount }} відгуків
+            </div>
       </div>
     </div>
 
