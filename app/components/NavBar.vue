@@ -3,23 +3,23 @@
       class="w-full border-b border-gray-200 bg-white text-gray-900 sticky top-0 z-50 shadow-md shadow-blue-200/30"
       aria-label="Main navigation"
     >
-        <div class="flex flex-row max-w-6xl mx-auto px-4 py-3 justify-between items-center">
+        <div class="flex flex-row max-w-6xl mx-auto px-4 py-2.5 justify-between items-center">
             <!-- Left: Catalog link -->
             <div class="flex items-center gap-6">
-                <div class="flex items-center gap-2">
-                    <div class="h-full w-10 rounded-xl bg-white border border-gray-200 grid place-items-center">
-                        <span class="p-1 bg-gradient-to-br from-blue-600 to-indigo-500 bg-clip-text text-transparent text-2xl font-black select-none">S</span>
+                <NuxtLink to="/" class="group flex items-center gap-2">
+                    <div class="h-10 w-10 rounded-xl mb-1.5 bg-white border border-gray-800 group-hover:border-gray-200 grid place-items-center transition duration-200">
+                        <span class="p-1 bg-zinc-900 group-hover:bg-gradient-to-br from-blue-600 to-indigo-500 bg-clip-text text-transparent text-2xl font-black select-none transition duration-200">S</span>
                     </div>
-                    <NuxtLink to="/" class="text-2xl items-center font-semibold hover:text-blue-600 transition">
+                    <div class="flex text-2xl mb-1.5 px-1 py-1 items-center font-semibold bg-zinc-900 group-hover:bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent transition duration-200">
                         Studentus
-                    </NuxtLink>
-                </div>
+                    </div>
+                </NuxtLink>
 
                 <!-- Request Button -->
                 <button
                     id="main"
-                    @click="$router.push('/')"
-                    class="gap-1 mt-1 inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
+                    @click="$router.push('http://localhost:8001/')"
+                    class="inline-flex items-center gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
                 >
                     Головна
                 </button>
@@ -28,7 +28,7 @@
                 <button
                     id="add-uni"
                     @click="$router.push('/uni-request')"
-                    class="inline-flex items-center gap-1 mt-1 gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
+                    class="inline-flex items-center  gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
                 >
                     Додати університет
                 </button>
@@ -37,21 +37,21 @@
                 <button
                     id="overall-rate"
                     @click="$router.push('school/${{user.id}}/rate')"
-                        class="inline-flex items-center gap-1 mt-1 gap-x-1.5 px-1 py-1 rounded-lg text-sm text-gray-500 hover:text-gray-800 font-medium hover:bg-gray-200 transition"
+                        class="inline-flex items-center gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
                     >
                         Залишити відгук
                     </button>
             </div>
 
             <!-- Right: Controls -->
-            <div class="flex items-center mt-1.5 gap-3">
+            <div class="flex items-center gap-3">
                 <!-- Language Switcher -->
-                <label class="sr-only" for="lang">Language</label>
-                <Dropdown id="lang" class="inline-block">
+                <!-- <label class="sr-only" for="lang">Language</label> -->
+                <!-- <Dropdown id="lang" class="inline-block"> -->
                     <!-- Custom button -->
-                    <template #button="{ opened, toggle }">
+                    <!-- <template #button="{ opened, toggle }">
                         <button 
-                            @click="toggle"
+                            @click="handleLogIn"
                             class="inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border border-gray-300 bg-transparent px-2 py-1 text-sm font-medium hover:bg-gray-200 focus:outline-none focus:ring focus:ring-blue-500"
                         >
                             {{ language.toUpperCase() }}
@@ -59,10 +59,10 @@
                                 <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
                         </button>
-                    </template>
+                    </template> -->
 
                     <!-- Menu items -->
-                    <template #menu="{ close }">
+                    <!-- <template #menu="{ close }">
                         <Menu 
                             @close="close" 
                             class="absolute left-0 mt-1 w-full bg-white border rounded-lg shadow-lg z-50"
@@ -78,8 +78,8 @@
                                 </p>
                             </div>
                         </Menu>
-                    </template>
-                </Dropdown>
+                    </template> -->
+                <!-- </Dropdown> -->
 
                 <!-- Theme Switcher -->
                 <!-- <button
@@ -100,7 +100,7 @@
                 <Dropdown id="account" class="inline-block">
                     <!-- Custom button -->
                     <template #button="{ opened, toggle }">
-                        <button 
+                        <button v-if="loggedIn"
                             @click="toggle"
                             class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-center font-medium hover:bg-gray-200 transition"
                         >
@@ -109,6 +109,18 @@
                                 name="mdi-light:account"
                                 class="text-xl align-middle"
                             />
+                        </button>
+                        <button v-else
+                            @click="handleRegister"
+                            class="inline-flex items-center gap-x-1.5 px-3 py-2 rounded-lg text-sm text-center font-medium hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
+                        >
+                            Зареєструватися
+                        </button>
+                        <button
+                            @click="handleLogIn"
+                            class="inline-flex items-center gap-x-1.5 px-3 py-2 ml-3 rounded-lg text-sm text-center font-medium bg-blue-600 text-gray-50 hover:shadow-md shadow-blue-500/60 transition"
+                        >
+                            Увійти
                         </button>
                     </template>
 
