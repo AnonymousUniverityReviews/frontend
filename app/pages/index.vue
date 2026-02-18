@@ -4,9 +4,9 @@
 
     <main class="flex-grow flex flex-col items-center justify-center px-4 py-16 text-center">
       <div class="mb-8">
-        <div class="mx-auto h-14 w-14 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-500 shadow-lg grid place-items-center">
+        <!-- <div class="mx-auto h-14 w-14 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-500 shadow-lg grid place-items-center">
           <span class="text-white text-2xl font-black select-none">S</span>
-        </div>
+        </div> -->
         <h1 class="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight">
           Studentus
         </h1>
@@ -105,7 +105,7 @@
                         <span class="font-bold text-xl">Studentus</span>
                     </div>
                     <p class="text-xs text-gray-500 max-w-xs">
-                        Studentus – єдиний в Україні сайт, який зібрав усі відгуки, важливі для студентів
+                        Studentus – Перший і єдиний сайт в Україні з повністю анонімною системою відгуків для студентів
                     </p>
                     <p class = "text-xs text-gray-500 max-w-xs">
                         © {{ new Date().getFullYear() }} Studentus. All rights reserved.
@@ -165,7 +165,7 @@ onUnmounted(() => {
 });
 
 const placeholder = computed(() => 'Знайти університет...')
-const demoPills = ['КНУ Шевченка', 'КПІ', 'ЛНУ Франка', 'Сумський державний університет']
+const demoPills = ['Львівська політехніка', 'Київ', 'Національний', 'Сумський державний університет']
 
 async function loadSchools(reset: boolean = false) {
     if (loading.value) return;

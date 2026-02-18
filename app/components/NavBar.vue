@@ -16,13 +16,14 @@
                 </NuxtLink>
 
                 <!-- Request Button -->
+                <NuxtLink to="/">
                 <button
-                    id="main"
-                    @click="$router.push('http://localhost:8001/')"
-                    class="inline-flex items-center gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
-                >
-                    Головна
-                </button>
+                        id="main"
+                        class="inline-flex items-center gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
+                    >
+                        Головна
+                    </button>
+                </NuxtLink>
 
                 <!-- Request Button -->
                 <button
@@ -110,13 +111,13 @@
                                 class="text-xl align-middle"
                             />
                         </button>
-                        <button v-else
+                        <button v-if="!loggedIn"
                             @click="handleRegister"
                             class="inline-flex items-center gap-x-1.5 px-3 py-2 rounded-lg text-sm text-center font-medium hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
                         >
                             Зареєструватися
                         </button>
-                        <button
+                        <button v-if="!loggedIn"
                             @click="handleLogIn"
                             class="inline-flex items-center gap-x-1.5 px-3 py-2 ml-3 rounded-lg text-sm text-center font-medium bg-blue-600 text-gray-50 hover:shadow-md shadow-blue-500/60 transition"
                         >
@@ -162,7 +163,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useColorMode } from '#imports'
+// import { useColorMode } from '#imports'
 
 const languages = ['en', 'ua'];
 
