@@ -7,8 +7,8 @@
       </div>
       
       <div class="flex flex-col gap-1">
-          <span class="text-blue-500 text-xs text-left font-bold uppercase tracking-wider">ТОП {{ rank }}/200</span>
-          <h1 class="text-xl font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors">
+          <!-- <span class="text-blue-500 text-xs text-left font-bold uppercase tracking-wider">ТОП {{ rank }}/200</span> -->
+          <h1 class="text-xl font-bold text-left text-gray-900 leading-tight group-hover:text-blue-600 transition-colors">
               {{ school.name }}
           </h1>
           <div class="flex flex-row items-center gap-1 text-sm font-normal text-gray-500">
@@ -26,7 +26,7 @@
               </a>
               <p class="text-gray-500 mx-1">|</p>
               <a :href="school.website" target="_blank" @click.stop class="flex items-center gap-1 hover:text-blue-500 transition-colors" v-if="school.website">
-                  <Icon name="mdi:web" class="text-gray-400" />
+                  <Icon name="mdi:web" class="text-gray-400 mt-0.5" />
                   <span class="truncate max-w-[200px]">{{ school.website.replace(/^https?:\/\//, '').replace(/\/$/, '') }}</span>
               </a>
           </div>
