@@ -1,174 +1,180 @@
 <template>
-    <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div class="min-h-screen flex flex-col bg-white text-gray-900">
         <NavBar class="h-16" />
-        <!-- School basic info header -->
-        <nav
-            class="w-full border-b border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/70 text-gray-900 dark:text-gray-100 backdrop-blur sticky top-14 z-40"
-            :class="[{ 'shadow-lg': scrolled }]"
-            aria-label="School basic information"
-        >
-            <div class="flex flex-row w-full mx-auto px-4 py-3 justify-center items-center gap-2">
-                <div class="flex flex-col px-3 py-3 justify-center items-center gap-1">
-                    <p class="text-xl font-semibold text-center">
-                        {{ school.name }}
-                    </p>
-                    <NuxtLink 
-                        :href="googleMapsURL(school.address)" 
-                        class="flex flex-row w-full items-center justify-center gap-x-1"
-                    >
-                        <p class="text-gray-500 dark:text-gray-300">
-                            {{ school.address }}
-                        </p>
-                        <Icon 
-                            name="mdi-light:map-marker"
-                            class="text-lg text-gray-500 dark:text-gray-300"
-                        ></Icon>
-                    </NuxtLink>
+        
+        <div class="max-w-4xl w-full mx-auto px-4 py-8 flex flex-col gap-6">
+            <!-- School Info Card -->
+            <div class="bg-gray-50 rounded-2xl p-6 shadow-sm flex flex-row items-center justify-between">
+                <div class="flex flex-row items-center gap-6">
+                    <!-- Logo Placeholder -->
+                    <div class="w-24 h-24 rounded-2xl bg-white border border-gray-100 p-2 flex items-center justify-center overflow-hidden shrink-0">
+                        <img src="" alt="University Logo" class="object-contain w-full h-full" />
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-blue-500 text-xs font-bold uppercase tracking-wider">ТОП {{ school.rank }}/200</span>
+                        <h1 class="text-xl font-bold text-gray-900 leading-tight">
+                            {{ school.name }}
+                        </h1>
+                        <div class="flex flex-row items-center gap-1 text-sm font-normal text-gray-500">
+                            <Icon 
+                                name="mdi-light:map-marker"
+                                class="text-lg text-gray-400"
+                            ></Icon>
+                            <NuxtLink 
+                                :href="googleMapsURL(school.address)"
+                            >
+                                <p class="text-gray-500">
+                                    {{ school.address }}
+                                </p>
+                            </NuxtLink>
+                            <p class="text-gray-500">|</p>
+                            <a :href="school.website" target="_blank" class="flex items-center gap-1 hover:text-blue-500 transition-colors">
+                                <Icon name="mdi:web" class="text-gray-400" />
+                                <span>{{ school.website }}</span>
+                            </a>
+                        </div>
+                        <!-- <button class="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-full w-fit flex items-center gap-2 transition-colors">
+                            Додати в обрані
+                            <Icon name="mdi:heart-outline" />
+                        </button> -->
+                    </div>
                 </div>
 
-                <NuxtLink
-                    v-if="loggedIn"
-                    :to="{ name: 'school-id-rate', params: { id: route.params.id } }"
-                    class="inline-flex items-center gap-x-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-100 !bg-gray-600 dark:!bg-blue-900 hover:!bg-gray-950 dark:hover:!bg-blue-950 transition"
-                >
-                    Rate
-                    <Icon 
-                        name="mdi-light:thumbs-up-down"
-                        class="text-xl align-middle"
-                    ></Icon>
-                </NuxtLink>
-                <div
-                    v-else
-                    class="inline-flex items-center gap-x-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-100 !bg-gray-600 dark:!bg-blue-900 hover:!bg-gray-950 dark:hover:!bg-blue-950 transition cursor-pointer"
-                    @click="login"
-                >
-                    Rate
-                    <Icon 
-                        name="mdi-light:thumbs-up-down"
-                        class="text-xl align-middle"
-                    ></Icon>
-                </div>
+                <!-- Overall Rating Badge -->
+                 <CircularRating 
+                    :model-value="school.overallRating || 0" 
+                    size="lg" 
+                    :stroke="5"
+                 />
+            </div>
 
-                <NuxtLink
-                    href="#"
-                    class="inline-flex items-center gap-x-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-100 !bg-gray-600 dark:!bg-blue-900 hover:!bg-gray-950 dark:hover:!bg-blue-950 transition"
-                >
-                    Compare
-                    <Icon 
-                        name="mdi-light:magnify"
-                        class="text-xl align-middle"
-                    ></Icon>
-                </NuxtLink>
+            <!-- Reviews Header -->
+            <div class="text-lg text-gray-800 font-medium">
+                {{ school.reviewsAmount }} студентів оцінили цей університет!
             </div>
-        </nav>
-        <!-- Ratings -->
-        <div 
-            id="ratings"
-            class="flex flex-row w-full h-auto my-6 justify-center items-center"
-        >
-            <div class="flex flex-col w-auto h-30 pr-8 justify-center items-center border-r-1 gap-2">
-                <p class="text-6xl font-bold">
-                    {{ school.overallRating >= 1 ? school.overallRating?.toFixed(2) : "N/A" }}
-                </p>
-                <p class="text-gray-500 dark:text-gray-300">
-                    Overall quality
-                </p>
+
+            <!-- Reviews List -->
+            <div class="flex flex-col gap-4">
+                <SchoolReviewCard
+                    v-for="review in displayedReviews"
+                    :key="review.id"
+                    :review="review"
+                />
             </div>
-            <div class="grid grid-cols-2 grid-rows-5 grid-flow-col w-auto pl-8 gap-4 gap-x-12">
-                <div 
-                    v-for="value, key, i in ratings"
-                    class="flex flex-row w-50 justify-between m-auto items-center"
-                >
-                    <Icon 
-                        :name="displayedRatingIcons[key]"
-                        class="text-xl mr-1"
-                    ></Icon>
-                    <p class="text-left w-30">
-                        {{ capitalize(key) }}
-                    </p>
-                    <p 
-                        class="text-xl text-gray-900 text-center w-14 py-1 px-2 font-semibold"
-                        :class="value >= 1 ? displayedRatingColors[Math.floor(value) - 1] : 'dark:text-gray-100'"
-                    >
-                        {{ value >= 1 ? value.toFixed(2) : "N/A"  }}
-                    </p>
-                </div>
+            
+             <!-- Infinite Scroll Trigger -->
+            <div ref="sentinel" v-if="isExpanded" class="h-10 w-full flex items-center justify-center">
+                <Icon v-if="loading" name="eos-icons:loading" class="text-2xl text-gray-400" />
             </div>
+             
+            <div v-if="!isExpanded && reviews.length > 5" class="flex justify-center mt-4">
+                <button @click="expandReviews" class="text-gray-500 hover:text-gray-700 flex items-center gap-1 text-sm font-medium transition">
+                    Читати далі
+                    <Icon name="mdi:chevron-down" />
+                </button>
+            </div>
+
         </div>
-        <!-- Reviews -->
-        <div id="reviews" class="flex flex-col justify-center items-center gap-4 w-[80%] mx-auto mb-8">
-            <p class="self-start text-left text-xl font-bold">
-                {{ school.reviewsAmount }} reviews
-            </p>
-            <SchoolReview
-                v-for="review in reviews"
-                :key="review.id"
-                :review="review"
-            ></SchoolReview>
-            <button 
-                v-if="cursor >= 0 && reviews.length < school.reviewsAmount" 
-                @click="getMoreReviews"
-                class="px-4 py-2 w-auto !text-base rounded-full text-gray-100 bg-gray-700 cursor-pointer"
-            >
-                Load more
-            </button>
-        </div>   
+
+        <!-- Footer -->
+        <footer class="mt-auto py-8 border-t border-gray-200 bg-gray-50">
+             <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center gap-2">
+                        <div class="h-14 w-14 rounded-2xl bg-white border border-gray-200 grid place-items-center">
+                            <span class="bg-gradient-to-br from-blue-600 to-indigo-500 bg-clip-text text-transparent text-3xl font-black select-none">S</span>
+                        </div>
+                        <span class="font-bold text-xl">Studentus</span>
+                    </div>
+                    <p class="text-xs text-gray-500 max-w-xs">
+                        Studentus – єдиний в Україні сайт, який зібрав усі відгуки, важливі для студентів
+                    </p>
+                    <p class = "text-xs text-gray-500 max-w-xs">
+                        © {{ new Date().getFullYear() }} Studentus. All rights reserved.
+                    </p>
+                </div>
+                 <div class="text-sm text-gray-500 text-right">
+                    <p class="font-semibold mb-1">Якщо у вас виникли будь-які запитання, напишіть нам:</p>
+                    <a href="mailto:contact@studentus.com" class="font-medium hover:underline">contact@studentus.com</a>
+                </div>
+             </div>
+        </footer>
+
     </div>
 </template>
 
 <script setup lang="ts">
-import {
-    initTooltips 
-} from 'flowbite'
 import { getSchoolById, getReviews } from '~/services/searchService';
 import type { Review, School } from '~/types';
-import { displayedRatingColors } from "~/constants/colors";
-import { displayedRatingIcons } from '~/constants/icons';
-import SchoolReview from '~/components/reviews/SchoolReview.vue';
+import SchoolReviewCard from '~/components/reviews/SchoolReviewCard.vue';
+import CircularRating from '~/components/CircularRating.vue';
+import { useIntersectionObserver } from '@vueuse/core';
 
-const { loggedIn, login } = useOidcAuth();
-
-const route = useRoute()
-
-const scrolled = ref(false)
-
-const handleScroll = () => {
-  scrolled.value = window.scrollY > 0
-}
-
-// initialize components based on data attribute selectors
-onMounted(() => {
-    useFlowbite(() => {
-        initTooltips();
-    });
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // check on load
-});
-
-onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll)
-});
-
+const route = useRoute();
 const id = +(route.params.id ?? 0);
 
-const school: School = (await getSchoolById(id)).result as School;
+const school = ref<School>({} as School);
+const reviews = ref<Review[]>([]);
+const cursor = ref(0);
+const loading = ref(false);
+const sentinel = ref<HTMLElement | null>(null);
 
-const ratings: Record<string, number> = Object.entries(school.ratings!)
-    .sort(([,a],[,b]) => b-a)
-    .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+const isExpanded = ref(false);
 
-let reviews = ref<Review[]>([]);
-let cursor = ref(0);
+const displayedReviews = computed(() => {
+    if (isExpanded.value) return reviews.value;
+    return reviews.value.slice(0, 5);
+});
 
-async function getMoreReviews() {
-    const reviewsResult = await getReviews("school", id, cursor.value);
-    cursor.value = reviewsResult.cursor;
-    for (const result of reviewsResult.result) {
-        reviews.value.push(result);
-    }
-    console.log(reviews.value.length, cursor.value);
+function expandReviews() {
+    isExpanded.value = true;
 }
 
-await getMoreReviews();
+try {
+    const schoolData = await getSchoolById(id);
+    school.value = schoolData.result as School;
+} catch (e) {
+    console.error("Failed to load school data", e);
+}
+
+// Infinite scroll logic
+async function loadMoreReviews() {
+    if (loading.value || cursor.value === -1) return;
+    
+    loading.value = true;
+    try {
+        await new Promise(r => setTimeout(r, 800));
+        
+        const reviewsResult = await getReviews("school", id, cursor.value);
+        
+        reviews.value.push(...reviewsResult.result);
+        
+         if (reviews.value.length > 20) {
+             cursor.value = -1;
+         } else {
+             cursor.value = reviewsResult.cursor; 
+         }
+
+    } catch (e) {
+        console.error("Failed to load reviews", e);
+    } finally {
+        loading.value = false;
+    }
+}
+
+await loadMoreReviews();
+
+// useIntersectionObserver(
+//     sentinel,
+//     ([{ isIntersecting }]) => {
+//         if (isIntersecting) {
+//             loadMoreReviews();
+//         }
+//     }
+// );
+
+useHead({
+    title: school.value.name
+})
 </script>
