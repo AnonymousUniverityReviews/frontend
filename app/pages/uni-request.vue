@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+    <div class="min-h-screen flex flex-col bg-white text-gray-900 transition-colors duration-200">
         <NavBar class="h-16 transition-colors duration-200" />
 
 
@@ -31,7 +31,7 @@
                             ]"
                         />
                         <p v-if="isLimitReached"
-                        class="flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200 text-yellow-600 dark:text-yellow-400">
+                        class="flex items-center gap-1 mt-1 text-xs font-semibold transition-colors duration-200 text-yellow-600">
                             <Icon name="mdi:alert-circle-outline" class="text-sm"/> Maximum {{ UNIVERSITY_NAME_MAX }} characters
                         </p>
 
@@ -82,7 +82,7 @@
                             ]"
                         />
                         <p :class="['mt-1 mr-1 text-xs text-right font-semibold transition-colors duration-200',
-                            isCommentLimitReached ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-500 dark:text-gray-600',
+                            isCommentLimitReached ? 'text-yellow-600' : 'text-gray-500',
                             ]">
                             {{ form.comment.length }}/{{ COMMENT_MAX }}
                         </p>
@@ -102,7 +102,7 @@
         </main>
 
         <!-- FOOTER -->
-        <footer class="py-8 text-center text-xs text-gray-500 dark:text-gray-400">
+        <footer class="py-8 text-center text-xs text-gray-500">
             <p>
                 © {{ new Date().getFullYear() }} Studentus. All rights reserved.
             </p>
