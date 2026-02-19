@@ -5,6 +5,7 @@ export function createDefaultReviewMessage(authorId: number, objectType: "school
         authorId: authorId,
         review: "",
         ratings: {
+            overallRating: 0,
             social: 0,
             opportunities: 0,
             clubs: 0,
@@ -16,8 +17,8 @@ export function createDefaultReviewMessage(authorId: number, objectType: "school
             internet: 0,
             safety: 0,
         },
-        for: { 
-            type: objectType, 
+        for: {
+            type: objectType,
             id: objectId
         },
     };

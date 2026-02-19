@@ -1,21 +1,20 @@
 <template>
   <div class="flex flex-col w-full h-auto">
-    <div class="flex flex-row w-full h-8">
-      <div
+    <div class="flex flex-row w-full gap-3 h-12">
+      <button
         v-for="(rating, i) in ratingTexts[inputSize]"
         :key="i"
-        class="w-[20%] h-full border-1 border-gray-400 dark:border-gray-600 cursor-pointer"
-        :class="[
-          i === 0 ? 'rounded-l-full' : '',
-          i === inputSize - 1 ? 'rounded-r-full' : '',
+        :class="['w-[20%] h-full rounded-2xl cursor-pointer flex items-center justify-center text-sm font-medium transition-all',
           getColor(i)
+            ? getColor(i) + ' text-white shadow-md transform scale-115' 
+            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:brightness-95'
         ]"
         @mouseenter="() => updateRatingText(i)"
         @mouseleave="() => updateRatingText(-1)"
         @click="selectRating(i)"
-      ></div>
+      >{{ i + 1 }}</button>
     </div>
-    <div class="flex flex-row content-center justify-between w-full h-6">
+    <div class="flex flex-row content-center justify-between w-full mt-2 h-6">
       <p v-if="selectedId < 0 && hoveredId < 0" class="w-[20%] text-left">
         {{ ratingTexts[inputSize][0] }}
       </p>
@@ -40,13 +39,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { hoverRatingColors, activeRatingColors } from "~/constants/colors";
+import { hoverRatingColors, ratingColorClasses } from "~/constants/colors";
 import { ratingTexts } from "~/constants/ratings";
 
 // v-model support
 const model = defineModel<number>({ default: 0 });
 
-const inputSize = 5;
+const inputSize = 10;
 
 const ratingText = ref<string>("");
 const selectedId = ref<number>(-1);
@@ -88,7 +87,7 @@ function getColor(i: number): string {
       return '';
     }
     if (selectedId.value >= i) {
-      return activeRatingColors[inputSize][i] ?? '';
+      return ratingColorClasses[inputSize][i] ?? '';
     }
     return "";
 }
