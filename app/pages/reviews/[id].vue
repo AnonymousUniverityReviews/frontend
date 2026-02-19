@@ -19,24 +19,34 @@
       <!-- Review Content -->
       <div v-else class="space-y-6">
         <!-- Back Navigation -->
-        <div class="flex items-center space-x-2 text-sm text-gray-500 hover:text-gray-700 transition-colors">
-            <button @click="$router.back()" class="flex items-center gap-1 cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-                </svg>
-                Назад
-            </button>
+        <!-- University Info Card -->
+        <div v-if="data.review.university" class="bg-gray-50 rounded-2xl p-6 shadow-sm flex flex-row items-center justify-between">
+            <div class="flex flex-row items-center gap-6">
+                <!-- Logo Placeholder -->
+                <div class="w-24 h-24 rounded-2xl bg-white border border-gray-100 p-2 flex items-center justify-center overflow-hidden shrink-0">
+                    <img :src="data.review.university.iconUrl || ''" alt="University Logo" class="object-contain w-full h-full" />
+                </div>
+                
+                <div class="flex flex-col gap-2">
+                    <h1 class="text-xl font-bold text-gray-900 leading-tight">
+                        {{ data.review.university.name }}
+                    </h1>
+                     <NuxtLink :to="`/school/${data.review.universityId}`" class="mt-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-full w-fit flex items-center gap-2 transition-colors">
+                        Більше відгуків
+                    </NuxtLink>
+                </div>
+            </div>
+
+                <CircularRating 
+                :model-value="data.review.university.averageScore || 0" 
+                size="lg" 
+                :stroke="5"
+                />
         </div>
 
         <div class="bg-white shadow overflow-hidden sm:rounded-lg">
            <SchoolReviewCard :review="data.review" :expanded="true" class="border-0 shadow-none" />
            
-           <!-- Additional details if needed that aren't in the card -->
-           <div v-if="data.review.university" class="px-6 py-4 border-t border-gray-100 bg-gray-50">
-               <p class="text-sm text-gray-500">
-                   Posted for <NuxtLink :to="`/school/${data.review.universityId}`" class="font-medium text-indigo-600 hover:text-indigo-500">{{ data.review.university.name }}</NuxtLink>
-               </p>
-           </div>
         </div>
       </div>
     </div>
@@ -70,13 +80,28 @@
 import { useRoute } from 'vue-router';
 import { getReviewByID } from '~/services/reviewService';
 import SchoolReviewCard from '~/components/reviews/SchoolReviewCard.vue';
+import CircularRating from '~/components/CircularRating.vue';
+
+import { getSchoolById } from '~/services/searchService';
 
 const route = useRoute();
 const reviewId = route.params.id as string;
 
-const { data, pending, error } = await useAsyncData(`review-${reviewId}`, () => getReviewByID(reviewId));
+const { data, pending, error } = await useAsyncData(`review-${reviewId}`, async () => {
+    const response = await getReviewByID(reviewId);
+    
+    if (response.exists && response.review && !response.review.university && response.review.universityId) {
+        try {
+            const schoolData = await getSchoolById(response.review.universityId);
+            response.review.university = schoolData.result;
+        } catch (e) {
+            console.error("Failed to fetch university for review", e);
+        }
+    }
+    
+    return response;
+});
 
-// Set page meta
 useHead({
   title: data.value?.exists ? `Відгук про ${data.value.review?.university?.name || 'University'}` : 'Відгук не знайдено',
 });
