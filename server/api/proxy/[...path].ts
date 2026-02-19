@@ -42,12 +42,12 @@ export default defineEventHandler(async (event) => {
   console.log('[API Proxy Debug] Path:', path, 'Original:', event.path, 'IsPublic:', isPublic);
 
   // 4. Reject if unauthenticated and not a public path
-  if (!accessToken && !isPublic) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized: Session expired or invalid. Please log in again.',
-    })
-  }
+  // if (!accessToken && !isPublic) {
+  //   throw createError({
+  //     statusCode: 401,
+  //     statusMessage: 'Unauthorized: Session expired or invalid. Please log in again.',
+  //   })
+  // }
 
   // 5. Construct the dynamic target path
   const target = joinURL(backendBaseUrl, path)
