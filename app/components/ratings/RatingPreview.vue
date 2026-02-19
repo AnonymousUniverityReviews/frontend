@@ -16,17 +16,17 @@
 </template>
 
 <script setup lang="ts">
-import { emptyRatingColor, activeRatingColors } from "~/constants/colors";
+import { emptyRatingColor, ratingColorClasses } from "~/constants/colors";
 
 const { rating = 0 } = defineProps<{
   rating?: number
 }>();
 
-const inputSize = 5;
+const inputSize = 10;
 
 function getColor(i: number): string {
     if (rating >= i) {
-      return activeRatingColors[inputSize][rating - 1] ?? emptyRatingColor;
+      return ratingColorClasses[inputSize][rating - 1] ?? emptyRatingColor;
     }
     return emptyRatingColor;
 }
