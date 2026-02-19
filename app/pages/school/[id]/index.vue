@@ -11,8 +11,8 @@
                         <img src="" alt="University Logo" class="object-contain w-full h-full" />
                     </div>
                     
-                    <div class="flex flex-col gap-1">
-                        <span class="text-blue-500 text-xs font-bold uppercase tracking-wider">ТОП {{ school.rank }}/200</span>
+                <div class="flex flex-col gap-1">
+                        <!-- <span class="text-blue-500 text-xs font-bold uppercase tracking-wider">ТОП {{ school.rank }}/200</span> -->
                         <h1 class="text-xl font-bold text-gray-900 leading-tight">
                             {{ school.name }}
                         </h1>
@@ -22,14 +22,14 @@
                                 class="text-lg text-gray-400"
                             ></Icon>
                             <NuxtLink 
-                                :href="googleMapsURL(school.address)"
+                                :href="googleMapsURL(school.city || '')"
                             >
                                 <p class="text-gray-500">
-                                    {{ school.address }}
+                                    {{ school.city || 'No city' }}
                                 </p>
                             </NuxtLink>
                             <p class="text-gray-500">|</p>
-                            <a :href="school.website" target="_blank" class="flex items-center gap-1 hover:text-blue-500 transition-colors">
+                            <a :href="school.website || undefined" target="_blank" class="flex items-center gap-1 hover:text-blue-500 transition-colors">
                                 <Icon name="mdi:web" class="text-gray-400" />
                                 <span>{{ school.website }}</span>
                             </a>
@@ -43,7 +43,7 @@
 
                 <!-- Overall Rating Badge -->
                  <CircularRating 
-                    :model-value="school.overallRating || 0" 
+                    :model-value="school.averageScore || 0" 
                     size="lg" 
                     :stroke="5"
                  />
@@ -51,7 +51,7 @@
 
             <!-- Reviews Header -->
             <div class="text-lg text-gray-800 font-medium">
-                {{ school.reviewsAmount }} студентів оцінили цей університет!
+                {{ school.reviewCount }} студентів оцінили цей університет!
             </div>
 
             <!-- Reviews List -->
@@ -106,18 +106,19 @@
 
 <script setup lang="ts">
 import { getSchoolById, getReviews } from '~/services/searchService';
-import type { Review, School } from '~/types';
+import type { Review, University } from '~/types';
 import SchoolReviewCard from '~/components/reviews/SchoolReviewCard.vue';
 import CircularRating from '~/components/CircularRating.vue';
 import { useIntersectionObserver } from '@vueuse/core';
 
 const route = useRoute();
-const id = +(route.params.id ?? 0);
+const id = route.params.id as string;
 
-const school = ref<School>({} as School);
+const school = ref<University>({} as University);
 const reviews = ref<Review[]>([]);
-const cursor = ref(0);
+const cursor = ref<string | null>(null);
 const loading = ref(false);
+const hasMoreReviews = ref(true);
 const sentinel = ref<HTMLElement | null>(null);
 
 const isExpanded = ref(false);
@@ -133,28 +134,25 @@ function expandReviews() {
 
 try {
     const schoolData = await getSchoolById(id);
-    school.value = schoolData.result as School;
+    school.value = schoolData.result as University; // result is University
 } catch (e) {
     console.error("Failed to load school data", e);
 }
 
 // Infinite scroll logic
 async function loadMoreReviews() {
-    if (loading.value || cursor.value === -1) return;
+    if (loading.value || !hasMoreReviews.value) return;
     
     loading.value = true;
     try {
-        await new Promise(r => setTimeout(r, 800));
+        // await new Promise(r => setTimeout(r, 800)); // Remove artificial delay
         
         const reviewsResult = await getReviews("school", id, cursor.value);
         
-        reviews.value.push(...reviewsResult.result);
+        reviews.value.push(...reviewsResult.data);
         
-         if (reviews.value.length > 20) {
-             cursor.value = -1;
-         } else {
-             cursor.value = reviewsResult.cursor; 
-         }
+        cursor.value = reviewsResult.nextCursor;
+        hasMoreReviews.value = reviewsResult.hasNextPage;
 
     } catch (e) {
         console.error("Failed to load reviews", e);
@@ -164,15 +162,6 @@ async function loadMoreReviews() {
 }
 
 await loadMoreReviews();
-
-// useIntersectionObserver(
-//     sentinel,
-//     ([{ isIntersecting }]) => {
-//         if (isIntersecting) {
-//             loadMoreReviews();
-//         }
-//     }
-// );
 
 useHead({
     title: school.value.name

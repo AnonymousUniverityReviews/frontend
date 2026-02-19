@@ -1,105 +1,91 @@
 export interface User {
-    id: number
-    name: string
-    email: string
+    id: string
+    universityId?: string | null
+    emailHash: string
+    emailConfirmed: boolean
+    accessFailedCount: number
+    isBanned: boolean
     createdAt: string
-    updatedAt: string
+    roles: { id: string, name: string }[]
 }
 
-export interface School {
-    id: number
+export interface University {
+    id: string
     name: string
-    address: string,
-    website: string,
-    rank: number,
-    overallRating: number | undefined,
-    ratings: {
-        social: number,
-        opportunities: number,
-        clubs: number,
-        reputation: number,
-        happiness: number,
-        location: number,
-        facilities: number,
-        food: number,
-        internet: number,
-        safety: number
-    } | undefined
-    reviewsAmount: number
+    city?: string | null
+    website?: string | null
+    iconUrl?: string | null
+    description?: string | null
+    averageScore: number
+    reviewCount: number
+    createdAt: string
+}
+
+// Alias for backward compatibility if needed, or we can refactor usage.
+// The previous "School" interface had "rank" and detailed "ratings".
+export interface School extends University {
+    // These fields are not in the new API yet, but might be needed for UI.
+    // Making them optional/derived or we will remove them.
+    address?: string // mapped to city?
+    rank?: number
+    overallRating?: number // mapped to averageScore
+    reviewsAmount?: number // mapped to reviewCount
+    ratings?: undefined // detailed ratings not supported by backend yet
 }
 
 export interface Faculty {
-    id: number
+    id: string
     name: string
-    school: string
+    universityId: string
 }
 
 export interface Professor {
-    id: number
+    id: string
     name: string
-    school: string
-    faculty: string
-    subject: string
+    universityId: string
+    facultyId?: string
+    subject?: string
 }
 
 export interface Post {
-    id: number
+    id: string
     title: string
     content: string
-    authorId: number
+    authorId: string
     createdAt: string
     updatedAt: string
 
     // relations (optional)
     author?: User
-    comments?: Comment[]
+    comments?: Comment[] // Comment type was not defined in original file, assuming it exists or is generic
 }
 
 export interface ReviewMessage {
-    authorId: number
+    universityId: string
+    score: number // Changed from detailed ratings to single score
     review: string
-    ratings: {
-        overallRating: number;
-        social: number,
-        opportunities: number,
-        clubs: number,
-        reputation: number,
-        happiness: number,
-        location: number,
-        facilities: number,
-        food: number,
-        internet: number,
-        safety: number
-    }
-    for: {
-        type: "school" | "faculty" | "professor"
-        id: number
-    }
 }
 
 export interface Review {
-    id: number
-    authorId: number
-    review: string
-    createdAt: number
-    overallRating: number
-    ratings: {
-        overallRating: number,
-        social: number,
-        opportunities: number,
-        clubs: number,
-        reputation: number,
-        happiness: number,
-        location: number,
-        facilities: number,
-        food: number,
-        internet: number,
-        safety: number
-    }
-    for: {
-        type: "school" | "faculty" | "professor"
-        id: number
-    }
-    thumbsUp: number
-    thumbsDown: number
+    id: string
+    universityId: string
+    userId: string
+    score: number
+    body: string
+    createdAt: string
+    updatedAt: string
+    university?: University
+}
+
+export interface LoginRequest {
+    email?: string;
+    password?: string;
+    rememberMe?: boolean;
+    returnUrl?: string;
+}
+
+export interface RegisterRequest {
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
 }

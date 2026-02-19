@@ -5,10 +5,10 @@
             <div class="flex flex-col gap-3 flex-1 mr-6 overflow-hidden">
                 <div class="relative h-[4.8em] overflow-hidden flex flex-col">
                     <p class="text-gray-800 text-sm">
-                        Anonym #{{ review.authorId }}
+                        Anonym #{{ review.userId.substring(0, 8) }}
                     </p>    
                     <p class="text-gray-800 text-base font-medium leading-relaxed my-auto">
-                        {{ review.review }}
+                        {{ review.body }}
                     </p>
                     
                     <div class="absolute right-0 bottom-0 h-[2em] w-40 bg-gradient-to-l from-gray-50 to-transparent"></div>
@@ -25,7 +25,7 @@
 
             <div class="flex-shrink-0">
                 <CircularRating 
-                    :model-value="review.overallRating" 
+                    :model-value="review.score" 
                     size="lg"
                     :stroke="5"
                     class="transition-transform duration-200 group-hover:scale-105"

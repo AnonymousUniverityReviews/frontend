@@ -88,7 +88,7 @@
                             <!-- {{ capitalize(type) }} -->
                             Загальна оцінка
                         </p>
-                        <RatingInput v-model="ratingValues[0]" />
+                        <RatingInput v-model="ratingValue" />
                     </div>
                 </div>
 
@@ -119,7 +119,7 @@
                             px-12 py-2 rounded-2xl text-base font-medium text-gray-50 bg-blue-600! 
                              hover:not-disabled:bg-blue-700! 
                             disabled:opacity-50 transition shadow-lg shadow-blue-500/30"
-                        :disabled="ratingValues[0] === 0 || review.review.length === 0"
+                        :disabled="ratingValue === 0 || review.review.length === 0"
                         @click="submitReviewMessage"
                     >
                         Надіслати
@@ -157,18 +157,22 @@
 
 import { getSchoolById } from '~/services/searchService';
 import { getReviewByAuthorID, submitReview } from '~/services/reviewService';
-import type { ReviewMessage, School } from '~/types';
+import { createDefaultReviewMessage } from '~/utils/reviews';
+import type { ReviewMessage, University } from '~/types';
 import { formColors } from "~/constants/colors";
 import RatingInput from '~/components/ratings/RatingInput.vue';
 
 const { user } = useOidcAuth();
 const route = useRoute();
 const router = useRouter();
-const schoolId = +(route.params.id!);
-const school: School = (await getSchoolById(schoolId)).result as School;
+const schoolId = route.params.id as string;
+// Casting result to University, assuming searchService returns { result: University, total: number } or similar wrapper
+const universityData = await getSchoolById(schoolId);
+const school: University = universityData.result; 
+
 const scrolled = ref(false);
 const showSuccessModal = ref(false);
-const selectedCategory = ref<'university' | null>(null);
+const selectedCategory = ref<'university' | null>('university'); // Default to university
 
 const handleScroll = () => {
   scrolled.value = window.scrollY > 0
@@ -184,10 +188,12 @@ onUnmounted(() => {
 });
 
 const userId = computed(() => {
-    return user.value?.userInfo?.sub ? parseInt(user.value.userInfo.sub as string) : 0;
+    return user.value?.userInfo?.sub ? (user.value.userInfo.sub as string) : "";
 });
 
-let fetchedReview = (await getReviewByAuthorID(userId.value, "school", schoolId)).review as ReviewMessage | undefined;
+// getReviewByAuthorID defaults to exists:false now
+let fetchedReviewData = await getReviewByAuthorID(userId.value, "school", schoolId);
+let fetchedReview = fetchedReviewData.review as ReviewMessage | undefined;
 
 if (!fetchedReview) {
     fetchedReview = createDefaultReviewMessage(userId.value, "school", schoolId);
@@ -195,13 +201,11 @@ if (!fetchedReview) {
 
 const review = ref<ReviewMessage>(fetchedReview!);
 
-const ratingValues = ref<number[]>(Object.values(review.value.ratings));
+// We only have one score now.
+const ratingValue = ref<number>(review.value.score || 0);
 
 async function submitReviewMessage() {
-
-
-
-    review.value.ratings.overallRating = ratingValues.value[0] ?? 0;
+    review.value.score = ratingValue.value;
     console.log("Final review object to submit:", review.value);
 
     await submitReview(review.value);

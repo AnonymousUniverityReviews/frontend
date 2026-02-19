@@ -4,7 +4,9 @@ import { getUserSession } from 'nuxt-oidc-auth/runtime/server/utils/session.js'
 export default defineEventHandler(async (event) => {
   // 1. Extract the backend URL from runtime config
   const config = useRuntimeConfig()
-  const backendBaseUrl = config.public.apiBase || 'http://localhost:8080' 
+  let backendBaseUrl = config.public.apiBase || 'https://localhost:8081'
+  // Ensure backendBaseUrl doesn't end with /api to avoid duplication with path
+  backendBaseUrl = backendBaseUrl.replace(/\/api\/?$/, '')
 
   console.log('[API Proxy] Incoming request path:', event.path)
   console.log('[API Proxy] Cookie header:', getHeader(event, 'cookie'))
@@ -16,7 +18,7 @@ export default defineEventHandler(async (event) => {
     const session = await getUserSession(event)
     accessToken = session.accessToken
 
-    console.log("[API Proxy] Session retrieved:", { 
+    console.log("[API Proxy] Session retrieved:", {
       hasAccessToken: !!accessToken,
       userId: session.userId,
       provider: session.provider
@@ -26,23 +28,37 @@ export default defineEventHandler(async (event) => {
   }
 
 
-  // 3. Reject if unauthenticated or token is missing
-  if (!accessToken) {
+  // 3. Define public paths that do not require authentication
+  const publicPaths = [
+    '/api/universities',
+    '/api/reviews'
+  ]
+
+  // Check if the current path starts with any of the public paths
+  // Note: event.path includes /api/proxy prefix, so we check the target path logic
+  const path = event.path.replace(/^\/api\/proxy\//, '')
+  const isPublic = publicPaths.some(p => path.startsWith(p) || ('/' + path).startsWith(p))
+
+  console.log('[API Proxy Debug] Path:', path, 'Original:', event.path, 'IsPublic:', isPublic);
+
+  // 4. Reject if unauthenticated and not a public path
+  if (!accessToken && !isPublic) {
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized: Session expired or invalid. Please log in again.',
     })
   }
 
-  // 4. Construct the dynamic target path
-  // Removes '/api/proxy/' from the incoming path to get the remaining segments
-  const path = event.path.replace(/^\/api\/proxy\//, '')
+  // 5. Construct the dynamic target path
   const target = joinURL(backendBaseUrl, path)
 
-  // 5. Proxy the request and inject the Authorization header
+  // 6. Proxy the request and inject the Authorization header if available
+  const headers: Record<string, string> = {}
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`
+  }
+
   return proxyRequest(event, target, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    headers
   })
 })

@@ -194,19 +194,18 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useHead, useRouter } from '#imports'
 import { getSchools } from '~/services/searchService'
-import type { School } from '~/types'
+import type { University } from '~/types'
 import UniversityCard from '~/components/UniversityCard.vue';
 
 const router = useRouter()
 const searchText = ref<string>("");
 
 // University List Data
-const schools = ref<School[]>([]);
-const page = ref(1);
-const pageSize = 5;
+const schools = ref<University[]>([]);
+const cursor = ref<string | null>(null);
+const pageSize = 10;
 const hasMore = ref(true);
 const loading = ref(false);
-const totalSchools = ref(0);
 const loadTrigger = ref<HTMLElement | null>(null); // Sentinel for infinite scroll
 const isInfiniteScrollActive = ref(false);
 let observer: IntersectionObserver | null = null;
@@ -218,7 +217,7 @@ function enableInfiniteScroll() {
 
 onMounted(() => {
     observer = new IntersectionObserver((entries) => {
-        if (!loading.value && hasMore.value && isInfiniteScrollActive.value) {
+        if (entries[0]?.isIntersecting && !loading.value && hasMore.value && isInfiniteScrollActive.value) {
             loadSchools();
         }
     }, {
@@ -291,27 +290,22 @@ async function loadSchools(reset: boolean = false) {
     loading.value = true;
     
     if (reset) {
-        page.value = 1;
+        cursor.value = null;
         schools.value = [];
         hasMore.value = true;
     }
 
     try {
-        const data = await getSchools(searchText.value, "basic", page.value, pageSize, selectedCity.value, selectedSort.value);
+        const data = await getSchools(searchText.value, "basic", 1, pageSize, selectedCity.value, selectedSort.value, cursor.value);
         
         if (reset) {
             schools.value = data.result;
         } else {
-             schools.value.push(...data.result);
+            schools.value.push(...data.result);
         }
         
-        totalSchools.value = data.total;
-        
-        if (data.result.length < pageSize || schools.value.length >= data.total) {
-            hasMore.value = false;
-        } else {
-            page.value++; 
-        }
+        cursor.value = data.nextCursor;
+        hasMore.value = data.hasNextPage;
 
     } catch (e) {
         console.error("Failed to load schools", e);

@@ -47,7 +47,6 @@ export interface UserQueryParams {
 // --- Real API Calls ---
 
 export async function getUsers(params: UserQueryParams) {
-  // Clean params: remove undefined or empty strings
   const query = Object.fromEntries(
     Object.entries(params).filter(([_, v]) => v != null && v !== '')
   )
@@ -58,19 +57,18 @@ export async function getUsers(params: UserQueryParams) {
   })
 }
 
-// SSR-friendly composable
 export function useUsers(queryParams: Ref<UserQueryParams> | UserQueryParams, options: any = {}) {
-    const params = computed(() => {
-        const p = unref(queryParams)
-        return Object.fromEntries(
-            Object.entries(p).filter(([_, v]) => v != null && v !== '')
-        )
-    })
+  const params = computed(() => {
+    const p = unref(queryParams)
+    return Object.fromEntries(
+      Object.entries(p).filter(([_, v]) => v != null && v !== '')
+    )
+  })
 
-    return useBackendFetch<PaginatedListOfUserPreview>('/api/proxy/users', {
-        query: params,
-        ...options
-    })
+  return useBackendFetch<PaginatedListOfUserPreview>('/api/proxy/users', {
+    query: params,
+    ...options
+  })
 }
 
 export async function getUserById(userId: string) {
@@ -86,32 +84,15 @@ export async function banUser(userId: string) {
 }
 
 
-// --- Mocked API Calls ---
-
 export async function updateUser(userId: string, data: any) {
-    console.log(`[MOCK] Updating user ${userId} with data:`, data);
-    // Simulate delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return { success: true };
-}
-
-export async function unbanUser(userId: string) {
-    console.log(`[MOCK] Unbanning user ${userId}`);
-    // Simulate delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return { success: true };
-}
-
-export async function updateUserRoles(userId: string, roles: string[]) {
-    console.log(`[MOCK] Updating roles for user ${userId} to:`, roles);
-    // Simulate delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return { success: true };
+  return api(`/users/${userId}`, {
+    method: 'PUT',
+    body: data
+  });
 }
 
 export async function deleteUser(userId: string) {
-    console.log(`[MOCK] Deleting user ${userId}`);
-    // Simulate delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return { success: true };
+  return api(`/users/${userId}`, {
+    method: 'DELETE'
+  });
 }
