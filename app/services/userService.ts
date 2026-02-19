@@ -77,8 +77,15 @@ export async function getUserById(userId: string) {
   })
 }
 
+
 export async function banUser(userId: string) {
   return api(`/users/${userId}/ban`, {
+    method: 'POST'
+  })
+}
+
+export async function unbanUser(userId: string) {
+  return api(`/users/${userId}/unban`, {
     method: 'POST'
   })
 }
