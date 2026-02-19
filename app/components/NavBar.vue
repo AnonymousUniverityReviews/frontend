@@ -35,13 +35,14 @@
                 </button>
 
                 <!-- UniRate Button -->
-                <button
+                <NuxtLink
+                    v-if="user?.userInfo?.university_id"
+                    :to="`/school/${user?.userInfo?.university_id}/rate`"
                     id="overall-rate"
-                    @click="$router.push(`/school/${user?.userInfo?.sub}/rate`)" 
-                        class="inline-flex items-center gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
-                    >
-                        Залишити відгук
-                    </button>
+                    class="inline-flex items-center gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
+                >
+                    <p>{{ user?.userInfo?.university_id }}</p>
+                </NuxtLink>
             </div>
 
             <!-- Right: Controls -->
@@ -173,6 +174,8 @@ const language = ref<string>('en')
 // const isDark = computed(() => colorMode.value === 'dark');
 
 const { loggedIn, user, login, logout } = useOidcAuth();
+console.log(loggedIn.value);
+console.log(user.value);
 
 // function toggleTheme() {
 //   colorMode.preference = isDark.value ? 'light' : 'dark'

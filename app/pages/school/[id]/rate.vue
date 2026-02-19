@@ -167,8 +167,25 @@ const route = useRoute();
 const router = useRouter();
 const schoolId = route.params.id as string;
 // Casting result to University, assuming searchService returns { result: University, total: number } or similar wrapper
-const universityData = await getSchoolById(schoolId);
-const school: University = universityData.result; 
+let universityData;
+let school: University = {
+    id: "",
+    name: "Unknown University",
+    city: "",
+    state: "",
+    address: "",
+    description: "",
+    images: [],
+    reviews: []
+} as any; // Temporary cast to avoid strict type issues if University type is complex
+
+try {
+    console.log("Fetching school with ID:", schoolId);
+    universityData = await getSchoolById(schoolId);
+    school = universityData.result; 
+} catch (error) {
+    console.error("Failed to fetch school data:", error);
+} 
 
 const scrolled = ref(false);
 const showSuccessModal = ref(false);
@@ -192,8 +209,17 @@ const userId = computed(() => {
 });
 
 // getReviewByAuthorID defaults to exists:false now
-let fetchedReviewData = await getReviewByAuthorID(userId.value, "school", schoolId);
-let fetchedReview = fetchedReviewData.review as ReviewMessage | undefined;
+let fetchedReviewData;
+let fetchedReview: ReviewMessage | undefined;
+
+try {
+    if (userId.value && schoolId) {
+        fetchedReviewData = await getReviewByAuthorID(userId.value, "school", schoolId);
+        fetchedReview = fetchedReviewData?.review;
+    }
+} catch (error) {
+    console.error("Failed to fetch existing review:", error);
+}
 
 if (!fetchedReview) {
     fetchedReview = createDefaultReviewMessage(userId.value, "school", schoolId);
