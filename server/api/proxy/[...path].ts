@@ -14,17 +14,20 @@ export default defineEventHandler(async (event) => {
   // 2. Extract the secure server-side session using nuxt-oidc-auth
   let accessToken = null
 
-  try {
-    const session = await getUserSession(event)
-    accessToken = session.accessToken
+  const cookie = getHeader(event, 'cookie')
+  if (cookie) {
+    try {
+      const session = await getUserSession(event)
+      accessToken = session.accessToken
 
-    console.log("[API Proxy] Session retrieved:", {
-      hasAccessToken: !!accessToken,
-      userId: session.userId,
-      provider: session.provider
-    })
-  } catch (err) {
-    console.error("[API Proxy] Error retrieving session:", err)
+      console.log("[API Proxy] Session retrieved:", {
+        hasAccessToken: !!accessToken,
+        userId: session.userId,
+        provider: session.provider
+      })
+    } catch (err) {
+      console.error("[API Proxy] Error retrieving session:", err)
+    }
   }
 
 
