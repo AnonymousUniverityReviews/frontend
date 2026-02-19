@@ -6,7 +6,7 @@
         <main class="grow flex flex-col items-center justify-center px-4 py-16">
             <div class="w-full max-w-md rounded-2xl">
                 <h1 class="text-2xl font-semibold text-center mb-10 transition">
-                    Submit a request to add an university
+                    Залишіть заявку на додавання університету
                 </h1>
 
                 <form class="space-y-8" @submit.prevent="onSubmit">
@@ -15,14 +15,14 @@
                         <label for="uniName" :class="['block mb-2 font-semibold transition-colors duration-200',
                             errors.universityName ? formColors.labelError : formColors.labelDefault]"
                         >
-                            Enter university name
+                            Введіть назву університету
                         </label>
                         <input
                             v-model="form.universityName"
                             id="uniName"
                             :maxlength="UNIVERSITY_NAME_MAX"
                             type="text"
-                            placeholder="Taras Shevchenko National University of Kyiv"
+                            placeholder="Національний університет імені Тараса Шевченка"
                             :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm', 
                                 formColors.inputBg,
                                 errors.universityName
@@ -46,7 +46,7 @@
                         <label for="emailDomain" :class="['block mb-2 font-semibold transition-colors duration-200',
                             errors.emailDomain ? formColors.labelError : formColors.labelDefault]"
                         >
-                            Enter email domain
+                            Введіть домен імейлу
                         </label>
                         <input
                             v-model="form.emailDomain"
@@ -69,19 +69,19 @@
                     <!-- Comment -->
                     <div>
                         <label for="comment" :class="['block mb-2 font-semibold transition-colors duration-200', formColors.labelDefault]">
-                            Enter comment (optional)
+                            Введіть коментар (необов'язково)
                         </label>
                         <textarea
                             v-model="form.comment"
                             :maxlength="COMMENT_MAX"
                             id="comment"
                             type="text"
-                            placeholder="Comment"
+                            placeholder="Введіть коментар"
                             :class="['w-full px-5 py-2.5 rounded-2xl border transition-colors duration-200 focus:outline-none text-base shadow-sm resize-none field-sizing-content', 
                                 formColors.inputBg, formColors.inputBorderDefault, formColors.ringDefault
                             ]"
                         />
-                        <p :class="['mt-1 ml-2 text-xs font-semibold transition-colors duration-200',
+                        <p :class="['mt-1 mr-1 text-xs text-right font-semibold transition-colors duration-200',
                             isCommentLimitReached ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-500 dark:text-gray-600',
                             ]">
                             {{ form.comment.length }}/{{ COMMENT_MAX }}
@@ -94,7 +94,7 @@
                             :disabled="isSubmitting"
                             class="px-5 py-3 pr-12 pl-12 rounded-2xl disabled:opacity-60 disabled:cursor-not-allowed bg-blue-500 hover:bg-blue-700 text-white transition"
                         >
-                            {{ isSubmitting ? 'Sending...' : 'Send' }}
+                            {{ isSubmitting ? 'Надсилання...' : 'Надіслати' }}
                         </button>
                     </div>
                 </form>
@@ -110,10 +110,10 @@
 
         <BaseModal 
             v-model="showSuccessModal" 
-            title="Request sent"
+            title="Запит надіслано"
         >
             <p>
-                Your request was sent successfully. You can close this window.
+                Ваш запит успішно надіслано. Ви можете закрити це вікно.
             </p>
         </BaseModal>
 
@@ -165,19 +165,19 @@ function validate() {
     let valid = true
 
     if (!form.universityName.trim()) {
-        errors.universityName = 'Please enter name of the university'
+        errors.universityName = 'Введіть назву університету'
         valid = false
     } else if (forbiddenUniversityNameRe.test(form.universityName.trim())) {
-        errors.universityName = 'University name contains invalid characters'
+        errors.universityName = 'Назва університету містить неприпустимі символи'
         valid = false
     }
 
     
     if (!form.emailDomain.trim()) {
-        errors.emailDomain = 'Please enter a valid email domain'
+        errors.emailDomain = 'Введіть домен електронної пошти'
         valid = false
     } else if (!form.emailDomain.startsWith('@')) {
-        errors.emailDomain = 'Domain must start with @'
+        errors.emailDomain = 'Домен повинен починатися з @'
         valid = false
     }
 
@@ -204,7 +204,7 @@ async function onSubmit() {
     /* Show success Modal */
     showSuccessModal.value = true
     } catch (e) {
-        alert('Error sending request')
+        alert('Помилка при надсиланні запиту')
     } finally {
         isSubmitting.value = false
     }
@@ -212,9 +212,9 @@ async function onSubmit() {
 }
 
 useHead({
-    title: 'Add University request | Studentus',
+    title: 'Додавання університету | Studentus',
     meta: [
-        { name: 'description', content: 'Submit a request to add a new university. Help our community grow by contributing verified educational institutions.' }
+        { name: 'description', content: 'Додавання університету. Допоможіть нашій спільноті зростати, надаючи перевірені навчальні заклади.' }
     ]
 })
 </script>
