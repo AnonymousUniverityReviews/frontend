@@ -8,7 +8,7 @@
                 <div class="flex flex-row items-center gap-6">
                     <!-- Logo Placeholder -->
                     <div class="w-24 h-24 rounded-2xl bg-white border border-gray-100 p-2 flex items-center justify-center overflow-hidden shrink-0">
-                        <img src="school.iconUrl" alt="University Logo" class="object-contain w-full h-full" />
+                        <img :src="school.iconUrl" alt="University Logo" class="object-contain w-full h-full" />
                     </div>
                     
                 <div class="flex flex-col gap-1">
