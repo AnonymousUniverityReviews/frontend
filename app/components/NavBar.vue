@@ -19,7 +19,7 @@
                 <NuxtLink to="/">
                 <button
                         id="main"
-                        class="inline-flex items-center gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
+                        class="inline-flex items-center gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition cursor-pointer"
                     >
                         Головна
                     </button>
@@ -29,17 +29,17 @@
                 <button
                     id="add-uni"
                     @click="$router.push('/uni-request')"
-                    class="inline-flex items-center  gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
+                    class="inline-flex items-center  gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition cursor-pointer"
                 >
                     Додати університет
                 </button>
 
                 <!-- UniRate Button -->
-                <NuxtLink
-                    v-if="user?.userInfo?.university_id"
-                    :to="`/school/${user?.userInfo?.university_id}/rate`"
+                <NuxtLink 
+                    v-if="loggedIn" 
+                    to="/rate"
                     id="overall-rate"
-                    class="inline-flex items-center gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
+                    class="inline-flex items-center gap-x-1.5 px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition cursor-pointer"
                 >
                     Залишити відгук
                 </NuxtLink>
@@ -98,15 +98,15 @@
 
 
                 <!-- Account Menu -->
-                <label class="sr-only" for="account">Account</label>
+                <label class="sr-only" for="account">Акаунт</label>
                 <Dropdown id="account" class="inline-block">
                     <!-- Custom button -->
                     <template #button="{ opened, toggle }">
                         <button v-if="loggedIn"
                             @click="toggle"
-                            class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-center font-medium hover:bg-gray-200 transition"
+                            class="inline-flex items-center gap-x-1.5 px-1 py-1 rounded-lg text-sm text-center font-medium hover:bg-gray-200 transition cursor-pointer"
                         >
-                            Account
+                            Акаунт
                             <Icon 
                                 name="mdi-light:account"
                                 class="text-xl align-middle"
@@ -114,13 +114,13 @@
                         </button>
                         <button v-if="!loggedIn"
                             @click="handleRegister"
-                            class="inline-flex items-center gap-x-1.5 px-3 py-2 rounded-lg text-sm text-center font-medium hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition"
+                            class="inline-flex items-center gap-x-1.5 px-3 py-2 rounded-lg text-sm text-center font-medium hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 border-gray-200 hover:shadow-md shadow-blue-500/10 transition cursor-pointer"
                         >
                             Зареєструватися
                         </button>
                         <button v-if="!loggedIn"
                             @click="handleLogIn"
-                            class="inline-flex items-center gap-x-1.5 px-3 py-2 ml-3 rounded-lg text-sm text-center font-medium bg-blue-600 text-gray-50 hover:shadow-md shadow-blue-500/60 transition"
+                            class="inline-flex items-center gap-x-1.5 px-3 py-2 ml-3 rounded-lg text-sm text-center font-medium bg-blue-600 text-gray-50 hover:shadow-md shadow-blue-500/60 transition cursor-pointer"
                         >
                             Увійти
                         </button>
@@ -137,21 +137,27 @@
                                     @click="handleLogIn"
                                     class="block w-full py-1 text-center text-sm text-gray-700 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
-                                    Log in
+                                    Увійти
                                 </div>
                                 <div
                                     @click="handleRegister"
                                     class="block w-full py-1 text-center text-sm text-gray-700 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
-                                    Register
+                                    Зареєструватися
                                 </div>
                             </div>
                             <div v-else class="py-1">
+                                <NuxtLink
+                                    to="/debug-user"
+                                    class="block w-full py-1 text-center text-sm text-gray-700 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
+                                >
+                                    Дебаг User
+                                </NuxtLink>
                                 <div
                                     @click="handleLogout"
                                     class="block w-full py-1 text-center text-sm text-gray-700 hover:bg-blue-600 hover:text-white cursor-pointer select-none"
                                 >
-                                    Log out
+                                    Вийти
                                 </div>
                             </div>
                         </Menu>
@@ -190,7 +196,7 @@ function handleLogIn() {
 }
 
 function handleRegister() {
-    login();
+    login({ extraQueryParams: { prompt: 'create' } });
 }
 
 function handleLogout() {

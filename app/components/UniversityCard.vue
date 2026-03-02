@@ -3,8 +3,10 @@
     <div class="flex flex-row items-center gap-6">
       <!-- Logo Placeholder (Using iconUrl if available, else placeholder) -->
       <div class="w-24 h-24 rounded-2xl bg-white border border-gray-100 p-2 flex items-center justify-center overflow-hidden shrink-0">
-          <img v-if="school.iconUrl" :src="school.iconUrl"  alt="University Logo" class="object-contain w-full h-full" />
-          <div v-else class="text-4xl text-gray-300 select-none">U</div>
+          <img v-if="school.iconUrl" :src="school.iconUrl" alt="University Logo" class="object-contain w-full h-full" @error="school.iconUrl = null" />
+          <div v-else class="text-3xl font-bold bg-gradient-to-br from-blue-500 to-indigo-600 bg-clip-text text-transparent select-none uppercase">
+              {{ school.name ? school.name.split(' ').slice(0, 2).map(w => w[0]).join('') : 'U' }}
+          </div>
       </div>
       
       <div class="flex flex-col gap-1">

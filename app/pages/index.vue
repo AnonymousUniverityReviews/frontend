@@ -31,6 +31,7 @@
                 :placeholder="placeholder"
                 class="w-full px-5 py-4 pr-12 rounded-2xl border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none text-base shadow-sm"
                 @focus="onFocus"
+                @keydown="handleSearchKeydown"
               />
               <button
                 class="absolute inset-y-0 right-0 px-4 flex items-center justify-center cursor-pointer"
@@ -55,7 +56,7 @@
       </div>
 
      <div class="w-full max-w-6xl mt-16 px-4">
-        <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+        <div class="flex flex-wrap justify-start items-center mb-6 gap-4">
              <!-- Sort Dropdown -->
             <div class="relative">
                 <button 
@@ -191,7 +192,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { useHead, useRouter } from '#imports'
 import { getSchools } from '~/services/searchService'
 import type { University } from '~/types'
@@ -210,7 +211,7 @@ const loadTrigger = ref<HTMLElement | null>(null); // Sentinel for infinite scro
 const isInfiniteScrollActive = ref(false);
 let observer: IntersectionObserver | null = null;
 
-function enableInfiniteScroll() {
+function enableInfiniteScroll() {       
     isInfiniteScrollActive.value = true;
     loadSchools();
 }
@@ -221,7 +222,7 @@ onMounted(() => {
             loadSchools();
         }
     }, {
-        rootMargin: '200px'
+        rootMargin: '200px' 
     });
 
     if (loadTrigger.value) {
@@ -283,20 +284,27 @@ function closeDropdowns(e: Event) {
 }
 
 
+let currentRequestId = 0;
+
 async function loadSchools(reset: boolean = false) {
-    if (loading.value) return;
+    // Prevent multiple pagination requests, but allow new search requests to proceed
+    if (!reset && loading.value) return;
     if (!hasMore.value && !reset) return;
 
+    const requestId = ++currentRequestId;
     loading.value = true;
     
     if (reset) {
         cursor.value = null;
-        schools.value = [];
+        // schools.value = []; // Removed to prevent page jumping/shaking when user types
         hasMore.value = true;
     }
 
     try {
         const data = await getSchools(searchText.value, "basic", 1, pageSize, selectedCity.value, selectedSort.value, cursor.value);
+        
+        // Skip if a newer request has already superseded this one
+        if (requestId !== currentRequestId) return;
         
         if (reset) {
             schools.value = data.result;
@@ -310,7 +318,9 @@ async function loadSchools(reset: boolean = false) {
     } catch (e) {
         console.error("Failed to load schools", e);
     } finally {
-        loading.value = false;
+        if (requestId === currentRequestId) {
+            loading.value = false;
+        }
     }
 }
 
@@ -330,6 +340,47 @@ async function handleSearchInput(query: string) {
 const handleSearchSubmit = (query: string) => {
   loadSchools(true);
 }
+
+// Demo Typing Emulation
+const demoSearchTriggerKey = ref('`');
+const demoSearchText = ref('шевченка');
+const isSearchTypingDemo = ref(false);
+
+const handleSearchKeydown = async (event: KeyboardEvent) => {
+    if (event.key === demoSearchTriggerKey.value) {
+        event.preventDefault(); 
+        if (isSearchTypingDemo.value) return;
+        
+        isSearchTypingDemo.value = true;
+        // Trigger a fresh start
+        searchText.value = ''; 
+        
+        for (let i = 0; i < demoSearchText.value.length; i++) {
+            if (!isSearchTypingDemo.value) break; 
+            
+            const char = demoSearchText.value.charAt(i);
+            searchText.value += char;
+            
+            // Force Vue to update the DOM instantly for maximum smoothness
+            await nextTick();
+            
+            // Fast, but human base typing speed (40ms - 80ms)
+            let delay = Math.floor(Math.random() * 40) + 40; 
+            
+            // Noticeable human pauses
+            if (char === ' ') {
+                delay += Math.floor(Math.random() * 50) + 20; // Slight hesitation on spaces
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+        
+        // Optional submit after typing
+        // handleSearchSubmit(searchText.value);
+        
+        isSearchTypingDemo.value = false;
+    }
+};
 
 useHead({
   title: 'Studentus – Знайти університет',

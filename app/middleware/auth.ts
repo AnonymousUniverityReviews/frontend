@@ -1,7 +1,15 @@
-export default defineNuxtRouteMiddleware((to, from) => {
-    const { loggedIn, login } = useOidcAuth();
+export default defineNuxtRouteMiddleware(async (to, from) => {
+    if (import.meta.server) return;
 
-    if (!loggedIn.value) {
-        return navigateTo('/auth/login', { external: true });
+    const nuxtApp = useNuxtApp();
+    const oidc = nuxtApp.$oidc as any;
+
+    if (!oidc) return;
+
+    const user = await oidc.getUser();
+
+    if (!user || user.expired) {
+        await oidc.signinRedirect({ state: to.fullPath });
+        return abortNavigation();
     }
-})
+});

@@ -4,4 +4,4 @@
 @plugin "flowbite/plugin";
 @source "../../../node_modules/flowbite";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.impossible-dark-class-override, .impossible-dark-class-override *));

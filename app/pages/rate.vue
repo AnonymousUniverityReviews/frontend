@@ -99,6 +99,7 @@
                     </p>
                     <textarea
                         v-model="review.review"
+                        @keydown="handleKeydown"
                         :class="['w-full p-4 text-base rounded-2xl resize-none focus:outline-none shadow-sm transition-colors duration-200', formColors.inputBg, formColors.inputBorderDefault, formColors.ringDefault]"
                         rows="8"
                         maxlength="1000"
@@ -150,9 +151,9 @@
 
 
 <script setup lang="ts">
-/* definePageMeta({
-    middleware: 'auth'
-}); */
+definePageMeta({
+    middleware: 'student'
+});
 
 
 import { getSchoolById } from '~/services/searchService';
@@ -165,27 +166,37 @@ import RatingInput from '~/components/ratings/RatingInput.vue';
 const { user } = useOidcAuth();
 const route = useRoute();
 const router = useRouter();
-const schoolId = route.params.id as string;
-// Casting result to University, assuming searchService returns { result: University, total: number } or similar wrapper
+
+const schoolId = computed(() => user.value?.userInfo?.university_id as string | undefined);
+
+if (!schoolId.value) {
+    console.warn("User has no university assigned in OIDC claim.");
+    // Optionally redirect back or handle elegantly. We'll just let the suspense handle it safely.
+}
+
 let universityData;
-let school: University = {
+let school = reactive<University>({
     id: "",
-    name: "Unknown University",
+    name: "Loading...",
     city: "",
     state: "",
     address: "",
     description: "",
     images: [],
     reviews: []
-} as any; // Temporary cast to avoid strict type issues if University type is complex
+} as any);
 
-try {
-    console.log("Fetching school with ID:", schoolId);
-    universityData = await getSchoolById(schoolId);
-    school = universityData.result; 
-} catch (error) {
-    console.error("Failed to fetch school data:", error);
-} 
+const { data: schoolRes, error: schoolErr } = await useAsyncData(
+    'schoolData-' + (schoolId.value || 'no-id'), 
+    () => schoolId.value ? getSchoolById(schoolId.value) : Promise.resolve(null),
+    { server: false } // Only fetch on client since auth is mostly client-side
+);
+
+if (schoolRes.value && schoolRes.value.result) {
+    Object.assign(school, schoolRes.value.result);
+} else if (schoolErr.value) {
+    console.error("Failed to fetch school data:", schoolErr.value);
+}
 
 const scrolled = ref(false);
 const showSuccessModal = ref(false);
@@ -208,24 +219,71 @@ const userId = computed(() => {
     return user.value?.userInfo?.sub ? (user.value.userInfo.sub as string) : "";
 });
 
-// getReviewByAuthorID defaults to exists:false now
-let fetchedReviewData;
-let fetchedReview: ReviewMessage | undefined;
+const { data: fetchedReviewData, error: fetchedReviewErr } = await useAsyncData(
+    'reviewData-' + userId.value + '-' + (schoolId.value || 'no-id'),
+    async () => {
+        if (userId.value && schoolId.value) {
+             const res = await getReviewByAuthorID(userId.value, "school", schoolId.value);
+             return res?.review;
+        }
+        return null;
+    },
+    { server: false }
+);
 
-try {
-    if (userId.value && schoolId) {
-        fetchedReviewData = await getReviewByAuthorID(userId.value, "school", schoolId);
-        fetchedReview = fetchedReviewData?.review;
-    }
-} catch (error) {
-    console.error("Failed to fetch existing review:", error);
+if (fetchedReviewErr.value) {
+    console.error("Failed to fetch existing review:", fetchedReviewErr.value);
 }
 
+let fetchedReview: ReviewMessage | undefined | null = fetchedReviewData.value;
 if (!fetchedReview) {
-    fetchedReview = createDefaultReviewMessage(userId.value, "school", schoolId);
+    fetchedReview = createDefaultReviewMessage(userId.value, "school", schoolId.value || "");
 }
 
 const review = ref<ReviewMessage>(fetchedReview!);
+
+// Demo Typing Emulation
+
+const demoTriggerKey = ref('`'); 
+const demoText = ref('Не вступайте сюди, це втрачені роки і найбільша помилка!! З прикольного тільки столовка і внутрішній дворик, а, ну і сторож на Коломойського схожий.');
+const isTypingDemo = ref(false);
+
+const handleKeydown = async (event: KeyboardEvent) => {
+    if (event.key === demoTriggerKey.value) {
+        event.preventDefault(); 
+        if (isTypingDemo.value) return;
+        
+        isTypingDemo.value = true;
+        review.value.review = ''; 
+        
+        for (let i = 0; i < demoText.value.length; i++) {
+            if (!isTypingDemo.value) break; 
+            
+            const char = demoText.value.charAt(i);
+            review.value.review += char;
+            
+            // Force Vue to update the DOM instantly for maximum smoothness
+            await nextTick();
+            
+            // Fast, but human base typing speed (20ms - 45ms)
+            let delay = Math.floor(Math.random() * 25) + 20; 
+            
+            // Noticeable human pauses
+            if (char === ' ') {
+                delay += Math.floor(Math.random() * 30) + 10; // Slight hesitation on spaces
+            } else if ([',', '.', '!'].includes(char)) {
+                delay += Math.floor(Math.random() * 200) + 150; // Deep breath at punctuation
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, delay));
+            
+            // Optional: Auto-scroll to bottom if it's a textarea
+            // const textarea = event.target as HTMLTextAreaElement;
+            // textarea.scrollTop = textarea.scrollHeight;
+        }
+        isTypingDemo.value = false;
+    }
+};
 
 // We only have one score now.
 const ratingValue = ref<number>(review.value.score || 0);
@@ -236,7 +294,9 @@ async function submitReviewMessage() {
 
     await submitReview(review.value);
     showSuccessModal.value = true;
-    //navigateTo({ name: 'school-id', params: { id: route.params.id } });
+    if (schoolId.value) {
+        navigateTo({ name: 'school-id', params: { id: schoolId.value as string } });
+    }
 }
 
 const handleCancel = () => {
