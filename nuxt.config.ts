@@ -30,7 +30,8 @@ export default defineNuxtConfig({
       }
     },
     public: {
-      apiBase: process.env.PRIVATE_API_BASE_URL
+      apiBase: process.env.PRIVATE_API_BASE_URL,
+      useMsw: process.env.NUXT_PUBLIC_USE_MSW === 'true'
     }
   },
   oidc: {
