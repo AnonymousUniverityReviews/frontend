@@ -13,11 +13,20 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return abortNavigation();
   }
 
-  // Check for Admin role
+  // Check for Student role
   const roles = user.profile?.role || [];
-  const isAdmin = Array.isArray(roles) ? roles.includes('Admin') : roles === 'Admin';
+  const isStudent = Array.isArray(roles) 
+    ? (roles.includes('Student') || roles.includes('student'))
+    : (roles === 'Student' || roles === 'student');
 
-  if (!isAdmin) {
+  if (!isStudent) {
+    return navigateTo('/');
+  }
+
+  // Grab the university id from the claim
+  const claimUniId = user.profile?.university_id;
+
+  if (!claimUniId) {
     return navigateTo('/');
   }
 });

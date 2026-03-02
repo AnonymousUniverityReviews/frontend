@@ -18,11 +18,15 @@
     "@tailwindcss/vite": "^4.1.12",
     "flowbite": "^3.1.2",
     "nuxt": "^4.0.3",
-    "nuxt-oidc-auth": "^1.0.0-beta.10",
+    "oidc-client-ts": "^3.4.1",
     "openid-client": "^6.6.4",
     "pinia": "^3.0.3",
     "tailwindcss": "^4.1.12",
+    "ufo": "^1.6.3",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0"
   }
 }

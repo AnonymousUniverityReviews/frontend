@@ -8,7 +8,10 @@
                 <div class="flex flex-row items-center gap-6">
                     <!-- Logo Placeholder -->
                     <div class="w-24 h-24 rounded-2xl bg-white border border-gray-100 p-2 flex items-center justify-center overflow-hidden shrink-0">
-                        <img :src="school.iconUrl" alt="University Logo" class="object-contain w-full h-full" />
+                        <img v-if="school.iconUrl" :src="school.iconUrl" alt="University Logo" class="object-contain w-full h-full" @error="school.iconUrl = null" />
+                        <div v-else class="text-3xl font-bold bg-gradient-to-br from-blue-500 to-indigo-600 bg-clip-text text-transparent select-none uppercase">
+                            {{ school.name ? school.name.split(' ').slice(0, 2).map(w => w[0]).join('') : 'U' }}
+                        </div>
                     </div>
                     
                 <div class="flex flex-col gap-1">
@@ -109,7 +112,7 @@ import { getSchoolById, getReviews } from '~/services/searchService';
 import type { Review, University } from '~/types';
 import SchoolReviewCard from '~/components/reviews/SchoolReviewCard.vue';
 import CircularRating from '~/components/CircularRating.vue';
-import { useIntersectionObserver } from '@vueuse/core';
+// import { useIntersectionObserver } from '@vueuse/core';
 
 const route = useRoute();
 const id = route.params.id as string;

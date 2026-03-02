@@ -29,8 +29,14 @@ export function getSchools(search: string = "", searchType: string = "basic", pa
         SortOrder: "Descending" // Default to descending
     };
 
-    if (search) queryParams.Name = search;
-    if (city) queryParams.City = city;
+    if (search && city) {
+        queryParams.Query = `${search} ${city}`;
+    } else if (search) {
+        queryParams.Query = search;
+    } else if (city) {
+        queryParams.Query = city;
+    }
+    
     if (cursor) queryParams.Cursor = cursor;
 
     // TODO: The Swagger says /api/universities returns binary string, but we expect JSON. 
