@@ -48,5 +48,6 @@ export const mockUniversities = [
     { id: "47", name: 'Маріупольський державний університет', averageScore: 7.9, reviewCount: 510, city: 'Київ', website: 'https://mdu.in.ua', logoUrl: 'https://storage.googleapis.com/school-logos/mdu.png' },
     { id: "48", name: 'Харківський національний педагогічний університет імені Г.С. Сковороди', averageScore: 8.0, reviewCount: 680, city: 'Харків', website: 'https://hnpu.edu.ua', logoUrl: 'https://storage.googleapis.com/school-logos/hnpu.png' },
     { id: "49", name: 'Національна музична академія України імені П. І. Чайковського', averageScore: 9.1, reviewCount: 340, city: 'Київ', website: 'https://knmau.com.ua', logoUrl: 'https://storage.googleapis.com/school-logos/knmau.png' },
-    { id: "50", name: 'Київський національний університет будівництва і архітектури', averageScore: 8.2, reviewCount: 1650, city: 'Київ', website: 'https://knuba.edu.ua', logoUrl: 'https://storage.googleapis.com/school-logos/knuba.png' }
+    { id: "50", name: 'Київський національний університет будівництва і архітектури', averageScore: 8.2, reviewCount: 1650, city: 'Київ', website: 'https://knuba.edu.ua', logoUrl: 'https://storage.googleapis.com/school-logos/knuba.png' },
+    { id: "51", name: 'Національний університет "Одеська політехніка"', averageScore: 8.2, reviewCount: 1650, city: 'Одеса', website: 'https://op.edu.ua', logoUrl: 'https://storage.googleapis.com/school-logos/op.png' }
 ];
